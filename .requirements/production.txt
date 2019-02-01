@@ -1,0 +1,5 @@
+Django
+django-extensions
+django-json-secrets
+django-phonenumber-field
+phonenumberslite
