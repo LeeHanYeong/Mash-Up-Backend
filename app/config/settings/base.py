@@ -49,6 +49,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATE_FORMAT = 'Y-m-d'
 DATETIME_FORMAT = 'Y-m-d H:M'
 
+# django-phonenumber-field
+PHONENUMBER_DEFAULT_REGION = 'KR'
+PHONENUMBER_DB_FORMAT = 'NATIONAL'
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

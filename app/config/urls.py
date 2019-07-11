@@ -17,7 +17,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 
-admin.site.site_header = 'Mash-Up 스터디 관리사이트'
+admin.site.site_header = 'Mash-Up 관리사이트'
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
