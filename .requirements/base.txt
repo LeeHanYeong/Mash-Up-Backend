@@ -1,11 +1,30 @@
 # Django
 Django
 django-extensions
+django-filter
 django-json-secrets
 django-phonenumber-field
+django-storages
+
+# DRF
+djangorestframework
+djangorestframework-api-key
+djangorestframework-camel-case
+django-cors-headers
+django-oauth-toolkit
+django-rest-auth
+drf-writable-nested
+drf-yasg
 
 # DB
 psycopg2-binary
 
+# Test
+pytest-cov
+pytest-django
+model_mommy
+
 # Other
+jinja2
+pillow
 phonenumberslite

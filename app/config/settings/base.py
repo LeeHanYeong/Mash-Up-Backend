@@ -41,6 +41,36 @@ AUTHENTICATION_BACKENDS = [
     'members.backends.PhoneNumberBackend',
 ]
 
+# AWS
+AWS_AUTO_CREATE_BUCKET = True
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_REGION_NAME = 'ap-northeast-2'
+AWS_DEFAULT_ACL = None
+
+# DRF
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'djangorestframework_camel_case.parser.CamelCaseFormParser',
+        'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'JSON_UNDERSCOREIZE': {
+        'no_underscore_before_number': True,
+    },
+    'EXCEPTION_HANDLER': 'utils.drf.exceptions.custom_exception_handler',
+}
+
 # Other modules
 ROOT_URLCONF = 'config.urls'
 WSGI_APPLICATION = 'config.wsgi.application'
@@ -54,21 +84,37 @@ PHONENUMBER_DEFAULT_REGION = 'KR'
 PHONENUMBER_DB_FORMAT = 'NATIONAL'
 
 # Application definition
-INSTALLED_APPS = [
+DJANGO_APPS = [
+    'members.apps.MembersConfig',
+    'study.apps.StudyConfig',
+    'utils',
+]
+DEFAULT_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'django_extensions',
-
-    'members.apps.MembersConfig',
-    'study.apps.StudyConfig',
 ]
+THIRD_PARTY_APPS = [
+    'django_extensions',
+    'django_filters',
+    'phonenumber_field',
+]
+DRF_APPS = [
+    'drf_yasg',
+    'corsheaders',
+    'rest_auth',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_api_key',
+]
+INSTALLED_APPS = DJANGO_APPS + DEFAULT_APPS + THIRD_PARTY_APPS + DRF_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
