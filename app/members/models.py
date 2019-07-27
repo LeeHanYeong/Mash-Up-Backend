@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager as BaseUserManager
 from django.db import models
-from django.db.models.functions import Concat
 from phonenumber_field.modelfields import PhoneNumberField
 
 __all__ = (
@@ -37,19 +36,18 @@ class Period(models.Model):
 class UserManager(BaseUserManager):
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
-        return qs.annotate(
-            full_name=Concat(
-                'last_name', 'first_name', output_field=models.CharField()
-            )
-        )
+        return qs
 
 
 class User(AbstractUser):
+    first_name = None
+    last_name = None
     period_set = models.ManyToManyField(
         Period, verbose_name='활동기수', blank=True,
         through='UserPeriodTeam', related_name='users', related_query_name='user',
     )
     phone_number = PhoneNumberField('전화번호', unique=True, blank=True, null=True)
+    name = models.CharField('이름', max_length=50, blank=True)
 
     objects = UserManager()
 
@@ -59,11 +57,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.name
-
-    @property
-    def name(self):
-        return getattr(self, 'full_name', f'{self.last_name}{self.first_name}')
-    name.fget.short_description = '이름'
 
 
 class UserPeriodTeam(models.Model):
