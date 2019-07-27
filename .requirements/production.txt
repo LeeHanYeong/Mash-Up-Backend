@@ -1,11 +1,1 @@
-# Django
-Django
-django-extensions
-django-json-secrets
-django-phonenumber-field
-
-# DB
-psycopg2-binary
-
-# Other
-phonenumberslite
+-r ./base.txt
