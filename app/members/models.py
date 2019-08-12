@@ -48,6 +48,7 @@ class User(AbstractUser):
     )
     phone_number = PhoneNumberField('전화번호', unique=True, blank=True, null=True)
     name = models.CharField('이름', max_length=50, blank=True)
+    github = models.CharField('GitHub 사용자명', max_length=50, blank=True)
 
     objects = UserManager()
 
@@ -76,6 +77,9 @@ class UserPeriodTeam(models.Model):
     class Meta:
         verbose_name = '사용자 활동기수 정보'
         verbose_name_plural = f'{verbose_name} 목록'
+        unique_together = (
+            ('user', 'period'),
+        )
 
     def __str__(self):
         return f'{self.period.number}기 | {self.team.name} | {self.user.name}'

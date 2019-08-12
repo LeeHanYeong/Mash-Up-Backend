@@ -10,7 +10,7 @@ class UserCreationForm(BaseUserCreationForm):
         fields = (
             'username',
             'email',
-            'last_name',
-            'first_name',
+            'name',
             'phone_number',
+            'github',
         )

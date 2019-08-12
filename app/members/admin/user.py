@@ -5,7 +5,7 @@ from ..forms import UserCreationForm
 
 class UserAdmin(BaseUserAdmin):
     list_display = ('name', 'username', 'email', 'phone_number', 'is_staff')
-    search_fields = ('full_name', 'email', 'phone_number',)
+    search_fields = ('name', 'email', 'phone_number',)
 
     fieldsets = (
         (None, {
@@ -16,10 +16,10 @@ class UserAdmin(BaseUserAdmin):
         }),
         ('개인정보', {
             'fields': (
-                'last_name',
-                'first_name',
+                'name',
                 'email',
                 'phone_number',
+                'github',
             )
         }),
         ('권한', {
