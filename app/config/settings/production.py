@@ -15,6 +15,7 @@ DEBUG = False or (
 )
 ALLOWED_HOSTS += [
     'localhost',
+    'mashup.localhost',
     '.elasticbeanstalk.com',
     '.amazonaws.com',
     'mashup.lhy.kr',

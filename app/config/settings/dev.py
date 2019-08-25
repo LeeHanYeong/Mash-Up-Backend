@@ -4,6 +4,7 @@ import_secrets()
 
 DEBUG = True
 ALLOWED_HOSTS += [
+    'mashup.localhost',
     'localhost',
     '127.0.0.1',
 ]
