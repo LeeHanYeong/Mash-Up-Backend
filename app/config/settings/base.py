@@ -14,6 +14,8 @@ import os
 
 from djs import import_secrets
 
+ALLOWED_HOSTS = []
+
 # Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ROOT_DIR = os.path.dirname(BASE_DIR)
