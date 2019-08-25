@@ -21,7 +21,7 @@ SECRETS_DIR = os.path.join(ROOT_DIR, '.secrets')
 
 # Import JSON secrets
 PRINT_JSON_SETTINGS = False
-import_secrets()
+secrets = import_secrets()
 
 # Static
 STATIC_URL = '/static/'
