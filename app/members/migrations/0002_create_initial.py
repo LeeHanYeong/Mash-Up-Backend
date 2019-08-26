@@ -7,23 +7,28 @@ def forwards_func(apps, schema_editor):
     db_alias = schema_editor.connection.alias
     Team = apps.get_model('members', 'Team')
     Period = apps.get_model('members', 'Period')
+    Group = apps.get_model('auth', 'Group')
 
     team_name_list = ['백엔드', 'iOS', '안드로이드', '디자인']
     for team_name in team_name_list:
         Team.objects.using(db_alias).create(name=team_name)
 
-    period_number_list = [1, 2, 3, 4, 5, 6, 7]
+    period_number_list = [1, 2, 3, 4, 5, 6, 7, 8]
     for period_number in period_number_list:
         Period.objects.using(db_alias).create(number=period_number)
+
+    Group.objects.using(db_alias).get_or_create(name='운영진')
 
 
 def reverse_func(apps, schema_editor):
     db_alias = schema_editor.connection.alias
     Team = apps.get_model('members', 'Team')
     Period = apps.get_model('members', 'Period')
+    Group = apps.get_model('auth', 'Group')
 
     Team.objects.using(db_alias).all().delete()
     Period.objects.using(db_alias).all().delete()
+    Group.objects.using(db_alias).filter(name='운영진').delete()
 
 
 class Migration(migrations.Migration):

@@ -1,6 +1,7 @@
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser, UserManager as BaseUserManager
+from django.contrib.auth.models import AbstractUser, UserManager as BaseUserManager, Group
 from django.db import models
+from django.db.models.signals import post_save
 from phonenumber_field.modelfields import PhoneNumberField
 
 __all__ = (
@@ -48,6 +49,7 @@ class User(AbstractUser):
     )
     phone_number = PhoneNumberField('전화번호', unique=True, blank=True, null=True)
     name = models.CharField('이름', max_length=50, blank=True)
+    email = models.EmailField('이메일', unique=True)
     github = models.CharField('GitHub 사용자명', max_length=50, blank=True)
 
     objects = UserManager()
