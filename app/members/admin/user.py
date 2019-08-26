@@ -26,9 +26,10 @@ class UserAdminProxy(User):
     outcount.fget.short_description = '아웃카운트'
 
 
+@admin.register(User)
 @admin.register(UserAdminProxy)
-class UserAdmin(BaseUserAdmin):
-    list_display = ('name', 'username', 'email', 'phone_number', 'is_staff', 'outcount')
+class UserAdminProxyAdmin(BaseUserAdmin):
+    list_display = ('name', 'username', 'email', 'phone_number', 'is_staff')
     search_fields = ('name', 'email', 'phone_number',)
 
     readonly_fields = (
@@ -48,7 +49,14 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
 
+    def get_list_display(self, request):
+        if hasattr(self.model, 'outcount'):
+            return self.list_display + ('outcount',)
+        return self.list_display
+
     def get_fieldsets(self, request, obj=None):
+        if not obj:
+            return self.add_fieldsets
         fieldsets = (
             (None, {
                 'fields': (

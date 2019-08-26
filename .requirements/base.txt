@@ -3,6 +3,7 @@ Django
 django-extensions
 django-filter
 django-json-secrets
+django-modeladmin-reorder
 django-phonenumber-field
 django-storages
 

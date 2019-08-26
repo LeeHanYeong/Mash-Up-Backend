@@ -29,6 +29,7 @@ class Period(models.Model):
     class Meta:
         verbose_name = '기수정보'
         verbose_name_plural = f'{verbose_name} 목록'
+        ordering = ('-number', '-pk', 'is_current',)
 
     def __str__(self):
         return f'{self.number}기'

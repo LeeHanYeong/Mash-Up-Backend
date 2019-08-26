@@ -51,6 +51,26 @@ AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_REGION_NAME = 'ap-northeast-2'
 AWS_DEFAULT_ACL = None
 
+# django-modeladmin-reorder
+ADMIN_REORDER = (
+    # 사용자
+    {'app': 'members', 'label': '사용자', 'models': (
+        'members.UserAdminProxy',
+        'members.UserPeriodTeam',
+        'members.UserPeriodOutcount',
+        # {'model': 'members.UserAdminProxy', 'label': '사용자'},
+        # {'model': 'members.UserPeriodTeam', 'label': '사용자 활동기수 정보'},
+        # {'model': 'members.UserPeriodOutcount', 'label': '세션'},
+    )},
+    # 기수, 팀
+    {'app': 'members', 'label': '기수 & 팀', 'models': (
+        'members.Period',
+        'members.Team',
+    )},
+
+    'auth',
+)
+
 # DRF
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -126,6 +146,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'admin_reorder.middleware.ModelAdminReorder',
 ]
 
 TEMPLATES = [
