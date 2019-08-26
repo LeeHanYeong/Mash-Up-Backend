@@ -9,7 +9,7 @@ def forwards_func(apps, schema_editor):
     Period = apps.get_model('members', 'Period')
     Group = apps.get_model('auth', 'Group')
 
-    team_name_list = ['백엔드', 'iOS', '안드로이드', '디자인']
+    team_name_list = ['백엔드', 'iOS', '안드로이드', '디자인', '웹', '브랜딩']
     for team_name in team_name_list:
         Team.objects.using(db_alias).create(name=team_name)
 
