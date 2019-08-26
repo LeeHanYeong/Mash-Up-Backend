@@ -17,10 +17,23 @@ import os
 
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth.views import (
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+)
 
 admin.site.site_header = 'Mash-Up 관리사이트'
+urlpatterns_views = [
+    path('password-reset/', PasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done/', PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+]
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include(urlpatterns_views)),
 ]
 
 SETTINGS_MODULE = os.environ.get('DJANGO_SETTINGS_MODULE')
