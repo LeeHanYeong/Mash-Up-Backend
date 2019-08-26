@@ -122,6 +122,7 @@ DEFAULT_APPS = [
     'django.contrib.staticfiles',
 ]
 THIRD_PARTY_APPS = [
+    'admin_reorder',
     'django_extensions',
     'django_filters',
     'phonenumber_field',
