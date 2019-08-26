@@ -19,13 +19,30 @@ class UserCreationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['email'].required = True
         self.fields['name'].required = True
+
+    def _get_validation_exclusions(self):
+        exclude = super()._get_validation_exclusions()
+        exclude.append('email')
+        return exclude
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        email = self.cleaned_data.get('email')
+        name = self.cleaned_data.get('name')
         if not user.username:
-            user.username = self.cleaned_data['email']
+            user.username = email
+            if not email:
+                user.email = None
+                index = 2
+                current_name = name
+                while User.objects.filter(
+                        Q(username=current_name) |
+                        Q(name=current_name)).exists():
+                    current_name = f'{name}{index}'
+                    print(current_name)
+                    index += 1
+                user.username = current_name
         if commit:
             user.save()
         return user
