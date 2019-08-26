@@ -34,6 +34,7 @@ MEDIA_ROOT = os.path.join(ROOT_DIR, '.media')
 STATIC_ROOT = os.path.join(ROOT_DIR, '.static')
 
 # Auth
+LOGIN_URL = 'admin:login'
 AUTH_USER_MODEL = 'members.User'
 ADMIN_USERNAME = 'lhy'
 ADMIN_PASSWORD = 'pbkdf2_sha256$120000$9SEp9OZWB5Ya$TVY41qkSk2g5WsPuXXYmYtCh1NwFO5ckJFIyMV8Yi4E='
@@ -41,6 +42,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'members.backends.SettingsBackend',
     'members.backends.PhoneNumberBackend',
+    'members.backends.EmailBackend',
 ]
 
 # AWS
