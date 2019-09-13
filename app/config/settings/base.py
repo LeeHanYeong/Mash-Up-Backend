@@ -53,6 +53,11 @@ AWS_DEFAULT_ACL = None
 
 # django-modeladmin-reorder
 ADMIN_REORDER = (
+    # 공지
+    {'app': 'notice', 'label': '공지사항', 'models': (
+        'notice.Notice',
+        'notice.Attendance',
+    )},
     # 사용자
     {'app': 'members', 'label': '사용자', 'models': (
         'members.UserAdminProxy',
@@ -110,6 +115,7 @@ PHONENUMBER_DB_FORMAT = 'NATIONAL'
 # Application definition
 DJANGO_APPS = [
     'members.apps.MembersConfig',
+    'notice.apps.NoticeConfig',
     'study.apps.StudyConfig',
     'utils',
 ]

@@ -41,9 +41,12 @@ class Period(models.Model):
 
 
 class UserManager(BaseUserManager):
-    def get_queryset(self, *args, **kwargs):
-        qs = super().get_queryset(*args, **kwargs)
-        return qs
+    def get_queryset(self):
+        return super().get_queryset().annotate(
+        ).select_related(
+        ).prefetch_related(
+            'user_period_team_set',
+        )
 
 
 class User(AbstractUser):
@@ -66,9 +69,18 @@ class User(AbstractUser):
         ordering = ('name',)
 
     def __str__(self):
-        if self.email:
-            return f'{self.name} ({self.email})'
-        return f'{self.username} (이메일 없음)'
+        email = self.email or '이메일 없음'
+        name = self.name if self.email else self.username
+        return f'{name} ({email})'
+
+
+class UserPeriodTeamManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+
+        ).prefetch_related(
+
+        )
 
 
 class UserPeriodTeam(models.Model):
@@ -85,6 +97,8 @@ class UserPeriodTeam(models.Model):
         related_name='user_period_team_set', related_query_name='user_period_team',
     )
 
+    objects = UserPeriodTeamManager()
+
     class Meta:
         verbose_name = '사용자 활동기수 정보'
         verbose_name_plural = f'{verbose_name} 목록'
@@ -93,7 +107,8 @@ class UserPeriodTeam(models.Model):
         )
 
     def __str__(self):
-        return f'{self.period.number}기 | {self.team.name} | {self.user.name}'
+        return str(self.pk)
+        # return f'{self.period.number}기 | {self.team.name} | {self.user.name}'
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

@@ -31,9 +31,13 @@ urlpatterns_views = [
     path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
+urlpatterns_apis = [
+    path('members/', include('members.urls')),
+]
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(urlpatterns_views)),
+    path('api/', include(urlpatterns_apis)),
 ]
 
 SETTINGS_MODULE = os.environ.get('DJANGO_SETTINGS_MODULE')

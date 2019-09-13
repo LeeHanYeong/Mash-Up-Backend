@@ -11,7 +11,7 @@ class Notice(TimeStampedModel):
         Team, verbose_name='팀', on_delete=models.CASCADE,
         related_name='notice_set', blank=True, null=True,
     )
-    title = models.CharField('공지명')
+    title = models.CharField('공지명', max_length=100)
     author = models.ForeignKey(
         User, verbose_name='작성자', on_delete=models.SET_NULL,
         related_name='notice_set', null=True,
@@ -22,10 +22,30 @@ class Notice(TimeStampedModel):
     address2 = models.CharField('상세주소', max_length=100, help_text='건물명/층/호수/상세장소 등', blank=True)
     description = models.TextField('설명', blank=True)
 
+    user_set = models.ManyToManyField(
+        User, verbose_name='투표할 사용자 목록',
+        through='Attendance', related_name='user_notice_set', blank=True,
+    )
+
     class Meta:
         verbose_name = '공지'
         verbose_name_plural = f'{verbose_name} 목록'
 
 
-class NoticeVote(models.Model):
-    pass
+class Attendance(models.Model):
+    VOTE_UNSELECTED, VOTE_ATTEND, VOTE_ABSENT, VOTE_LATE = 'unselected', 'attend', 'absent', 'late'
+    CHOICES_VOTE = (
+        (VOTE_UNSELECTED, '미선택'),
+        (VOTE_ATTEND, '참여'),
+        (VOTE_ABSENT, '미참여'),
+        (VOTE_LATE, '지각'),
+    )
+    notice = models.ForeignKey(Notice, verbose_name='공지', on_delete=models.CASCADE, related_name='attendance_set')
+    user = models.ForeignKey(User, verbose_name='사용자', on_delete=models.CASCADE, related_name='attendance_set')
+    vote = models.CharField('투표', choices=CHOICES_VOTE, max_length=15, default=VOTE_UNSELECTED)
+    result = models.CharField('실제 참석결과', choices=CHOICES_VOTE, max_length=15, blank=True)
+
+    class Meta:
+        verbose_name = '공지 참석 투표'
+        verbose_name_plural = f'{verbose_name} 목록'
+
