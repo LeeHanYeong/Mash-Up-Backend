@@ -103,7 +103,7 @@ class UserPeriodTeam(models.Model):
         verbose_name = '사용자 활동기수 정보'
         verbose_name_plural = f'{verbose_name} 목록'
         unique_together = (
-            ('user', 'period'),
+            ('user', 'period', 'team'),
         )
 
     def __str__(self):

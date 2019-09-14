@@ -48,11 +48,14 @@ class PhoneNumberBackend:
 class EmailBackend:
     def authenticate(self, request, username=None, email=None, password=None):
         try:
-            user = User.objects.get(Q(username=username) | Q(username=email) | Q(email=email) | Q(email=username))
-            if user.check_password(password):
-                return user
+            user = User.objects.get(username__in=[username, email])
         except User.DoesNotExist:
-            return None
+            try:
+                user = User.objects.exclude(email=None).get(email__in=[username, email])
+            except User.DoesNotExist:
+                return None
+        if user.check_password(password):
+            return user
         return None
 
     def get_user(self, user_id):

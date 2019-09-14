@@ -6,6 +6,15 @@ from members.models import Team
 User = get_user_model()
 
 
+class NoticeManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+
+        ).prefetch_related(
+            'user_set',
+        )
+
+
 class Notice(TimeStampedModel):
     team = models.ForeignKey(
         Team, verbose_name='팀', on_delete=models.CASCADE,
@@ -27,9 +36,14 @@ class Notice(TimeStampedModel):
         through='Attendance', related_name='user_notice_set', blank=True,
     )
 
+    objects = NoticeManager()
+
     class Meta:
         verbose_name = '공지'
         verbose_name_plural = f'{verbose_name} 목록'
+
+    def __str__(self):
+        return self.title
 
 
 class Attendance(models.Model):
@@ -48,4 +62,13 @@ class Attendance(models.Model):
     class Meta:
         verbose_name = '공지 참석 투표'
         verbose_name_plural = f'{verbose_name} 목록'
+        unique_together = (
+            ('notice', 'user'),
+        )
 
+    def __str__(self):
+        return '{notice_title} ({user}, {vote})'.format(
+            notice_title=self.notice.title,
+            user=self.user.name,
+            vote=self.get_vote_display(),
+        )
