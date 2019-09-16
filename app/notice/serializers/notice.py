@@ -3,14 +3,28 @@ from rest_framework import serializers
 
 from members.serializers import TeamSerializer, UserSerializer
 from utils.drf.exceptions import ValidationError
-from .models import Notice, User, Attendance
+from ..models import Notice, User, Attendance
+
+
+class _NoticeAttendanceSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    vote_display = serializers.CharField(source='get_vote_display')
+
+    class Meta:
+        model = Attendance
+        fields = (
+            'pk',
+            'user',
+            'vote',
+            'vote_display',
+        )
 
 
 class NoticeSerializer(serializers.ModelSerializer):
     team = TeamSerializer()
     author = UserSerializer()
 
-    user_set = UserSerializer(many=True, help_text='투표할 사용자 목록')
+    attendance_set = _NoticeAttendanceSerializer(many=True, help_text='투표현황 목록')
 
     class Meta:
         model = Notice
@@ -25,7 +39,7 @@ class NoticeSerializer(serializers.ModelSerializer):
             'address2',
             'description',
 
-            'user_set',
+            'attendance_set',
         )
 
 

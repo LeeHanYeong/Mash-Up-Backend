@@ -77,7 +77,7 @@ class User(AbstractUser):
 class UserPeriodTeamManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().select_related(
-
+            
         ).prefetch_related(
 
         )

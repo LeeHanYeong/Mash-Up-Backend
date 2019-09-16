@@ -9,9 +9,12 @@ User = get_user_model()
 class NoticeManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().select_related(
-
+            'author',
         ).prefetch_related(
-            'user_set',
+            'author__user_period_team_set',
+            'attendance_set',
+            'attendance_set__user',
+            'attendance_set__user__user_period_team_set',
         )
 
 
