@@ -2,9 +2,9 @@ from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, permissions, status
 
-from .models import Notice
-from .permissions import NoticeAuthorOrReadOnly
-from .serializers import NoticeSerializer, NoticeCreateUpdateSerializer
+from .models import Notice, Attendance
+from .permissions import NoticeAuthorOrReadOnly, AttendanceUserOrReadOnly
+from .serializers import NoticeSerializer, NoticeCreateUpdateSerializer, AttendanceUpdateSerializer
 
 
 @method_decorator(
@@ -75,6 +75,23 @@ class NoticeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
             return NoticeSerializer
         elif self.request.method in ('PATCH', 'PUT'):
             return NoticeCreateUpdateSerializer
+
+    @swagger_auto_schema(auto_schema=None)
+    def put(self, request, *args, **kwargs):
+        super().put(request, *args, **kwargs)
+
+
+@method_decorator(
+    name='patch',
+    decorator=swagger_auto_schema(
+        operation_summary='Attendance Update',
+        operation_description='공지 참석 투표 수정',
+    )
+)
+class AttendanceUpdateAPIView(generics.UpdateAPIView):
+    queryset = Attendance.objects.all()
+    serializer_class = AttendanceUpdateSerializer
+    permission_classes = (AttendanceUserOrReadOnly,)
 
     @swagger_auto_schema(auto_schema=None)
     def put(self, request, *args, **kwargs):
