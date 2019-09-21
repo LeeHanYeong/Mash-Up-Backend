@@ -1,3 +1,4 @@
+from rest_auth.serializers import TokenSerializer
 from rest_framework import serializers
 
 from .models import User, Team, Period, UserPeriodTeam
@@ -47,4 +48,13 @@ class UserSerializer(serializers.ModelSerializer):
             'github',
 
             'user_period_team_set',
+        )
+
+
+class AuthTokenSerializer(TokenSerializer):
+    user = UserSerializer()
+
+    class Meta(TokenSerializer.Meta):
+        fields = TokenSerializer.Meta.fields + (
+            'user',
         )

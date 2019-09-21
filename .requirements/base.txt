@@ -13,6 +13,7 @@ djangorestframework-api-key
 djangorestframework-camel-case
 django-cors-headers
 django-oauth-toolkit
+django-push-notifications
 django-rest-auth
 drf-writable-nested
 drf-yasg

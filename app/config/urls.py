@@ -32,6 +32,8 @@ from drf_yasg.renderers import ReDocRenderer as BaseReDocRenderer, OpenAPIRender
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
+from . import views
+
 admin.site.site_header = 'Mash-Up 관리사이트'
 
 
@@ -72,6 +74,8 @@ class RedocSchemaView(BaseSchemaView):
 
 
 urlpatterns_views = [
+    path('', views.IndexView.as_view(), name='index'),
+    path('push/', views.PushView.as_view(), name='push'),
     path('password-reset/', PasswordResetView.as_view(), name='password_reset'),
     path('password-reset/done/', PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
