@@ -1,6 +1,8 @@
+from aws_secrets import SECRETS
+
 from .base import *
 
-import_secrets()
+AWS_SECRETS_MANAGER_SECRETS_SECTION = 'mashup:dev'
 
 DEBUG = True
 ALLOWED_HOSTS += [
@@ -8,6 +10,15 @@ ALLOWED_HOSTS += [
     'localhost',
     '127.0.0.1',
 ]
+
+# AWS
+AWS_STORAGE_BUCKET_NAME = SECRETS['AWS_STORAGE_BUCKET_NAME']
+
+# DB
+DATABASES = SECRETS['DATABASES']
+
+# django-push-notifications
+PUSH_NOTIFICATIONS_SETTINGS['FCM_API_KEY'] = SECRETS['FCM_API_KEY']
 
 # django-debug-toolbar
 INTERNAL_IPS = [

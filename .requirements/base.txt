@@ -1,8 +1,8 @@
 # Django
 Django
+django-aws-secrets-manager
 django-extensions
 django-filter
-django-json-secrets
 django-modeladmin-reorder
 django-phonenumber-field
 django-storages
@@ -27,6 +27,7 @@ pytest-django
 model_mommy
 
 # Other
+boto3
 jinja2
 pillow
 phonenumberslite

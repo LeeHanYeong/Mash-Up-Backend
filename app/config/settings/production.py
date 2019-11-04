@@ -6,7 +6,10 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 from .base import *
 
-secrets = import_secrets()
+AWS_SECRETS_MANAGER_SECRETS_SECTION = 'mashup:production'
+
+# AWS
+AWS_STORAGE_BUCKET_NAME = SECRETS['AWS_STORAGE_BUCKET_NAME']
 
 DEBUG = False or (
         len(sys.argv) > 1
@@ -20,10 +23,11 @@ ALLOWED_HOSTS += [
     '.amazonaws.com',
     'mashup.lhy.kr',
 ]
+DATABASES = SECRETS['DATABASES']
 
 # Sentry
 sentry_sdk.init(
-    dsn=secrets['SENTRY_DSN'],
+    dsn=SECRETS['SENTRY_DSN'],
     integrations=[DjangoIntegration()]
 )
 

@@ -25,12 +25,13 @@ from django.contrib.auth.views import (
     PasswordResetCompleteView,
 )
 from django.urls import path, include
-from django.urls import re_path
 from drf_yasg import openapi
 from drf_yasg.generators import OpenAPISchemaGenerator
 from drf_yasg.renderers import ReDocRenderer as BaseReDocRenderer, OpenAPIRenderer
 from drf_yasg.views import get_schema_view
+from push_notifications.api.rest_framework import APNSDeviceAuthorizedViewSet, GCMDeviceAuthorizedViewSet
 from rest_framework import permissions
+from rest_framework.routers import DefaultRouter
 
 from . import views
 
@@ -73,6 +74,10 @@ class RedocSchemaView(BaseSchemaView):
     renderer_classes = (ReDocRenderer, OpenAPIRenderer)
 
 
+router = DefaultRouter()
+router.register(r'apns', APNSDeviceAuthorizedViewSet)
+router.register(r'gcm', GCMDeviceAuthorizedViewSet)
+
 urlpatterns_views = [
     path('', views.IndexView.as_view(), name='index'),
     path('push/', views.PushView.as_view(), name='push'),
@@ -82,11 +87,12 @@ urlpatterns_views = [
     path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
 urlpatterns_apis = [
+    path('device/', include(router.urls)),
     path('members/', include('members.urls')),
     path('notices/', include('notice.urls')),
 ]
 urlpatterns = [
-    re_path(r'^doc/$', RedocSchemaView.as_cached_view(cache_timeout=0), name='schema-redoc'),
+    path('doc/', RedocSchemaView.as_cached_view(cache_timeout=0), name='schema-redoc'),
 
     path('admin/', admin.site.urls),
     path('', include(urlpatterns_views)),
