@@ -24,6 +24,7 @@ ALLOWED_HOSTS += [
     'mashup.lhy.kr',
 ]
 DATABASES = SECRETS['DATABASES']
+DBBACKUP_STORAGE_OPTIONS['bucket_name'] = SECRETS['AWS_STORAGE_BUCKET_NAME']
 
 # Sentry
 sentry_sdk.init(

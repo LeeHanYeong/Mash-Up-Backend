@@ -7,7 +7,6 @@ ALLOWED_HOSTS = []
 # Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ROOT_DIR = os.path.dirname(BASE_DIR)
-SECRETS_DIR = os.path.join(ROOT_DIR, '.secrets')
 
 # django-aws-secrets-manager
 AWS_SECRETS_MANAGER_SECRETS_NAME = 'lhy'
@@ -25,6 +24,13 @@ AWS_AUTO_CREATE_BUCKET = SECRETS['AWS_AUTO_CREATE_BUCKET']
 AWS_S3_FILE_OVERWRITE = SECRETS['AWS_S3_FILE_OVERWRITE']
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_REGION_NAME = 'ap-northeast-2'
+
+# django-dbbackup
+DBBACKUP_STORAGE = 'config.storages.DBStorage'
+DBBACKUP_STORAGE_OPTIONS = {
+    'access_key': SECRETS['AWS_S3_ACCESS_KEY_ID'],
+    'secret_key': SECRETS['AWS_S3_SECRET_ACCESS_KEY'],
+}
 
 # Email
 EMAIL_HOST = SECRETS['EMAIL_HOST']
@@ -56,10 +62,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # django-push-notifications
-PUSH_NOTIFICATIONS_SETTINGS = {
-    'WP_PRIVATE_KEY': os.path.join(SECRETS_DIR, 'private_key.pem'),
-    'WP_CLAIMS': {'sub': 'mailto: dev@lhy.kr'},
-}
+# PUSH_NOTIFICATIONS_SETTINGS = {
+#     'WP_PRIVATE_KEY': os.path.join(SECRETS_DIR, 'private_key.pem'),
+#     'WP_CLAIMS': {'sub': 'mailto: dev@lhy.kr'},
+# }
 
 # django-modeladmin-reorder
 ADMIN_REORDER = (
@@ -172,6 +178,7 @@ DEFAULT_APPS = [
 ]
 THIRD_PARTY_APPS = [
     'admin_reorder',
+    'dbbackup',
     'django_extensions',
     'django_filters',
     'phonenumber_field',
