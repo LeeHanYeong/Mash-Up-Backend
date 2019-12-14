@@ -40,6 +40,9 @@ EMAIL_PORT = SECRETS['EMAIL_PORT']
 EMAIL_USE_SSL = SECRETS['EMAIL_USE_SSL']
 DEFAULT_FROM_EMAIL = SECRETS['DEFAULT_FROM_EMAIL']
 
+# django-cors-headers
+CORS_ORIGIN_WHITELIST = SECRETS['CORS_ORIGIN_WHITELIST']
+
 # Static
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
@@ -183,6 +186,7 @@ DEFAULT_APPS = [
 ]
 THIRD_PARTY_APPS = [
     'admin_reorder',
+    'corsheaders',
     'dbbackup',
     'django_extensions',
     'django_filters',
