@@ -46,6 +46,21 @@ class UserListAPIView(generics.ListAPIView):
 
 
 @method_decorator(
+    name='get',
+    decorator=swagger_auto_schema(
+        operation_summary='Profile',
+        operation_description='유저 프로필 (헤더에 토큰이 존재할 시, 토큰에 해당하는 유저정보 리턴)',
+    )
+)
+class ProfileAPIView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user
+
+
+@method_decorator(
     name='post',
     decorator=swagger_auto_schema(
         operation_summary='AuthToken',

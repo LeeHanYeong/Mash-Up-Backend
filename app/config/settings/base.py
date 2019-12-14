@@ -186,7 +186,6 @@ DEFAULT_APPS = [
 ]
 THIRD_PARTY_APPS = [
     'admin_reorder',
-    'corsheaders',
     'dbbackup',
     'django_extensions',
     'django_filters',
