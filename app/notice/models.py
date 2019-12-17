@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import F, Count, Q
 from django_extensions.db.models import TimeStampedModel
 from members.models import Team
 
@@ -10,6 +12,7 @@ class NoticeManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().select_related(
             'author',
+            'team',
         ).prefetch_related(
             'author__user_period_team_set',
             'attendance_set',
@@ -17,8 +20,26 @@ class NoticeManager(models.Manager):
             'attendance_set__user__user_period_team_set',
         )
 
+    def with_count(self):
+        return self.get_queryset().annotate(
+            attendance_voted_count=Count(
+                'attendance_set',
+                filter=~Q(
+                    attendance_set__vote=Attendance.VOTE_UNSELECTED
+                )
+            ),
+            attendance_count=Count('attendance_set'),
+        )
+
 
 class Notice(TimeStampedModel):
+    TYPE_ALL, TYPE_TEAM, TYPE_PROJECT = ('all', 'team', 'project')
+    TYPE_CHOICES = (
+        (TYPE_ALL, '전체 공지'),
+        (TYPE_TEAM, '팀별 공지'),
+        (TYPE_PROJECT, '프로젝트 공지'),
+    )
+    type = models.CharField('공지유형', choices=TYPE_CHOICES, max_length=10)
     team = models.ForeignKey(
         Team, verbose_name='팀', on_delete=models.CASCADE,
         related_name='notice_set', blank=True, null=True,
@@ -44,9 +65,27 @@ class Notice(TimeStampedModel):
     class Meta:
         verbose_name = '공지'
         verbose_name_plural = f'{verbose_name} 목록'
+        ordering = (F('start_at').desc(nulls_last=True), '-pk')
 
     def __str__(self):
         return self.title
+
+    def clean(self):
+        if self.type == self.TYPE_TEAM:
+            if self.team is None:
+                raise ValidationError('팀별 공지인 경우, 해당 팀을 선택해야 합니다')
+
+    def save(self, **kwargs):
+        self.clean()
+        super().save()
+
+
+class AttendanceManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'notice',
+            'user',
+        )
 
 
 class Attendance(models.Model):
@@ -61,6 +100,8 @@ class Attendance(models.Model):
     user = models.ForeignKey(User, verbose_name='사용자', on_delete=models.CASCADE, related_name='attendance_set')
     vote = models.CharField('투표', choices=CHOICES_VOTE, max_length=15, default=VOTE_UNSELECTED)
     result = models.CharField('실제 참석결과', choices=CHOICES_VOTE, max_length=15, blank=True)
+
+    objects = AttendanceManager()
 
     class Meta:
         verbose_name = '공지 참석 투표'

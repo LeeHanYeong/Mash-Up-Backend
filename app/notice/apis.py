@@ -27,7 +27,7 @@ from .serializers import NoticeSerializer, NoticeCreateUpdateSerializer, Attenda
     )
 )
 class NoticeListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Notice.objects.all()
+    queryset = Notice.objects.with_count()
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
     )
@@ -67,7 +67,7 @@ class NoticeListCreateAPIView(generics.ListCreateAPIView):
     ),
 )
 class NoticeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Notice.objects.all()
+    queryset = Notice.objects.with_count()
     permission_classes = (
         NoticeAuthorOrReadOnly,
     )

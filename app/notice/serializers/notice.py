@@ -21,15 +21,20 @@ class _NoticeAttendanceSerializer(serializers.ModelSerializer):
 
 
 class NoticeSerializer(serializers.ModelSerializer):
+    type_display = serializers.CharField(source='get_type_display')
     team = TeamSerializer()
     author = UserSerializer()
 
     attendance_set = _NoticeAttendanceSerializer(many=True, help_text='투표현황 목록')
+    attendance_voted_count = serializers.IntegerField(help_text='투표에 참여한 인원 수')
+    attendance_count = serializers.IntegerField(help_text='투표 가능한 총 인원 수')
 
     class Meta:
         model = Notice
         fields = (
             'pk',
+            'type',
+            'type_display',
             'team',
             'title',
             'author',
@@ -40,6 +45,8 @@ class NoticeSerializer(serializers.ModelSerializer):
             'description',
 
             'attendance_set',
+            'attendance_voted_count',
+            'attendance_count',
         )
 
 
@@ -52,6 +59,7 @@ class NoticeCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notice
         fields = (
+            'type',
             'team',
             'title',
             'start_at',
@@ -80,7 +88,8 @@ class NoticeCreateUpdateSerializer(serializers.ModelSerializer):
             user_pk_list = validated_data.pop('user_pk_list', [])
             notice = super().create(validated_data)
             users = User.objects.filter(pk__in=user_pk_list)
-            Attendance.objects.bulk_create([Attendance(notice=notice, user=user) for user in users])
+            Attendance.objects.bulk_create(
+                [Attendance(notice=notice, user=user) for user in users])
             return notice
 
     def update(self, instance, validated_data):
@@ -97,7 +106,10 @@ class NoticeCreateUpdateSerializer(serializers.ModelSerializer):
             create_users = User.objects.filter(pk__in=create_user_pk_list)
 
             # 새 Attendance create
-            Attendance.objects.bulk_create([Attendance(notice=notice, user=user) for user in create_users])
+            Attendance.objects.bulk_create(
+                [Attendance(notice=notice, user=user)
+                 for user in create_users]
+            )
             return notice
 
     def to_representation(self, instance):

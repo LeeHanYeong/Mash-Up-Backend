@@ -216,7 +216,7 @@ description = "A high-level Python Web framework that encourages rapid developme
 name = "django"
 optional = false
 python-versions = ">=3.5"
-version = "2.2.7"
+version = "2.2.8"
 
 [package.dependencies]
 pytz = "*"
@@ -1324,7 +1324,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pathlib2", "contextlib2", "unittest2"]
 
 [metadata]
-content-hash = "26071a3c02cae17f4f964ad789e4d19cf2b9f8d623610986dfc75869b572bbed"
+content-hash = "b8c1b8bf3972245dcafc5e3b6a7104fde796d74ff64b470b17c6e1c11f3b64fc"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1485,8 +1485,8 @@ defusedxml = [
     {file = "defusedxml-0.6.0.tar.gz", hash = "sha256:f684034d135af4c6cbb949b8a4d2ed61634515257a67299e5f940fbaa34377f5"},
 ]
 django = [
-    {file = "Django-2.2.7-py3-none-any.whl", hash = "sha256:89c2007ca4fa5b351a51a279eccff298520783b713bf28efb89dfb81c80ea49b"},
-    {file = "Django-2.2.7.tar.gz", hash = "sha256:16040e1288c6c9f68c6da2fe75ebde83c0a158f6f5d54f4c5177b0c1478c5b86"},
+    {file = "Django-2.2.8-py3-none-any.whl", hash = "sha256:fa98ec9cc9bf5d72a08ebf3654a9452e761fbb8566e3f80de199cbc15477e891"},
+    {file = "Django-2.2.8.tar.gz", hash = "sha256:a4ad4f6f9c6a4b7af7e2deec8d0cbff28501852e5010d6c2dc695d3d1fae7ca0"},
 ]
 django-aws-secrets-manager = [
     {file = "django-aws-secrets-manager-0.1.2.tar.gz", hash = "sha256:f4ab55578a9e4faebe856ca599d2e6a6c2a6a0b09fcfc48f2ac38aba4e3e7c4e"},
@@ -1869,6 +1869,8 @@ pywinpty = [
     {file = "pywinpty-0.5.5.tar.gz", hash = "sha256:cec9894ecb34de3d7b1ca121dd98433035b9f8949b5095e84b103b349231509c"},
 ]
 pyzmq = [
+    {file = "pyzmq-18.1.0-0_py38h16f9016-cp38-cp38-win_amd64.whl", hash = "sha256:a43341630f285d157c89bba21e33153fed477762e4f8fd9b02899a135fac1360"},
+    {file = "pyzmq-18.1.0-0_py38h16f9016-cp38-cp38m-win_amd64.whl", hash = "sha256:5e25b92f30dc63add328a7537137c813628b8e8eb720e3cf6f1bbe6c36fe247d"},
     {file = "pyzmq-18.1.0-cp27-cp27m-macosx_10_6_intel.whl", hash = "sha256:856b2cdf7a1e2cbb84928e1e8db0ea4018709b39804103d3a409e5584f553f57"},
     {file = "pyzmq-18.1.0-cp27-cp27m-win32.whl", hash = "sha256:2762c45e289732d4450406cedca35a9d4d71e449131ba2f491e0bf473e3d2ff2"},
     {file = "pyzmq-18.1.0-cp27-cp27m-win_amd64.whl", hash = "sha256:fa4bad0d1d173dee3e8ef3c3eb6b2bb6c723fc7a661eeecc1ecb2fa99860dd45"},
@@ -1892,6 +1894,8 @@ pyzmq = [
     {file = "pyzmq-18.1.0-cp37-cp37m-win32.whl", hash = "sha256:41bf96d5f554598a0632c3ec28e3026f1d6591a50f580df38eff0b8067efb9e7"},
     {file = "pyzmq-18.1.0-cp37-cp37m-win_amd64.whl", hash = "sha256:0463bd941b6aead494d4035f7eebd70035293dd6caf8425993e85ad41de13fa3"},
     {file = "pyzmq-18.1.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:9055ed3f443edae7dc80f253fc54257f8455fc3062a7832c60887409e27c9f82"},
+    {file = "pyzmq-18.1.0-cp38-cp38-manylinux1_i686.whl", hash = "sha256:b0117e8b87e29c3a195b10a5c42910b2ad10b139e7fa319d1d6f2e18c50e69b1"},
+    {file = "pyzmq-18.1.0-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:51c2579e5daab2d039957713174061a0ba3a2c12235e9a493155287d172c1ccd"},
     {file = "pyzmq-18.1.0-pp271-pypy_41-macosx_10_14_x86_64.whl", hash = "sha256:2fc6cada8dc53521c1189596f1898d45c5f68603194d3a6453d6db4b27f4e12e"},
     {file = "pyzmq-18.1.0-pp371-pypy3_71-macosx_10_14_x86_64.whl", hash = "sha256:1fadc8fbdf3d22753c36d4172169d184ee6654f8d6539e7af25029643363c490"},
     {file = "pyzmq-18.1.0.tar.gz", hash = "sha256:93f44739db69234c013a16990e43db1aa0af3cf5a4b8b377d028ff24515fbeb3"},
@@ -1922,6 +1926,7 @@ requests = [
     {file = "ruamel.yaml.clib-0.2.0-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:550168c02d8de52ee58c3d8a8193d5a8a9491a5e7b2462d27ac5bf63717574c9"},
     {file = "ruamel.yaml.clib-0.2.0-cp37-cp37m-win32.whl", hash = "sha256:57933a6986a3036257ad7bf283529e7c19c2810ff24c86f4a0cfeb49d2099919"},
     {file = "ruamel.yaml.clib-0.2.0-cp37-cp37m-win_amd64.whl", hash = "sha256:b1b7fcee6aedcdc7e62c3a73f238b3d080c7ba6650cd808bce8d7761ec484070"},
+    {file = "ruamel.yaml.clib-0.2.0-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:be018933c2f4ee7de55e7bd7d0d801b3dfb09d21dad0cce8a97995fd3e44be30"},
     {file = "ruamel.yaml.clib-0.2.0.tar.gz", hash = "sha256:b66832ea8077d9b3f6e311c4a53d06273db5dc2db6e8a908550f3c14d67e718c"},
 ]
 s3transfer = [

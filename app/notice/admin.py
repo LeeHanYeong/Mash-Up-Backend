@@ -10,9 +10,13 @@ class AttendanceInline(admin.TabularInline):
 
 @admin.register(Notice)
 class NoticeAdmin(admin.ModelAdmin):
+    list_display = ('title', 'type', 'team', 'author', 'start_at', 'duration', 'address1', 'address2')
+    list_filter = ('type', 'team')
     inlines = [AttendanceInline]
 
 
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('notice', 'user', 'vote', 'result')
+    list_filter = ('vote', 'result')
+    search_fields = ('notice__title', 'user__name')
