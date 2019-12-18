@@ -118,12 +118,15 @@ class NoticeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
 class AttendanceUpdateAPIView(generics.UpdateAPIView):
     queryset = Attendance.objects.all()
     serializer_class = AttendanceUpdateSerializer
-    permission_classes = (AttendanceUserOrReadOnly,)
+    permission_classes = (
+        permissions.IsAuthenticated,
+        AttendanceUserOrReadOnly,
+    )
 
     def get_object(self):
         try:
             attendance = super().get_object()
-        except (AssertionError, Http404):
+        except (Attendance.DoesNotExist, AssertionError, Http404):
             notice_pk = self.request.data.get('notice_pk')
             notice = get_object_or_404(Notice, pk=notice_pk)
             attendance = notice.attendance_set.get(user=self.request.user)

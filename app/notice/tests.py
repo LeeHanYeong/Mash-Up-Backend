@@ -9,7 +9,7 @@ from notice.models import Notice, Attendance
 class AttendanceTest(APITestCase):
     def test_attendance_update(self):
         users = baker.make(User, _quantity=10)
-        notice = baker.make(Notice)
+        notice = baker.make(Notice, type=Notice.TYPE_ALL)
         attendances = [
             baker.make(Attendance, user=user, notice=notice)
             for user in users
