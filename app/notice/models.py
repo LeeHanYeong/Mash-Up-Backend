@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import F, Count, Q
+from django.db.models import F, Count, Q, OuterRef, Exists
 from django_extensions.db.models import TimeStampedModel
 from members.models import Team
 from utils.django.models import Model
@@ -21,8 +21,8 @@ class NoticeManager(models.Manager):
             'attendance_set__user__user_period_team_set',
         )
 
-    def with_count(self):
-        return self.get_queryset().annotate(
+    def with_count(self, user=None):
+        qs = self.get_queryset().annotate(
             attendance_voted_count=Count(
                 'attendance_set',
                 filter=~Q(
@@ -31,6 +31,13 @@ class NoticeManager(models.Manager):
             ),
             attendance_count=Count('attendance_set'),
         )
+        if user:
+            is_voted = Attendance.objects.filter(
+                notice=OuterRef('pk'),
+                user=user,
+            ).exclude(vote=Attendance.VOTE_UNSELECTED)
+            qs = qs.annotate(is_voted=Exists(is_voted))
+        return qs
 
 
 class Notice(TimeStampedModel, Model):

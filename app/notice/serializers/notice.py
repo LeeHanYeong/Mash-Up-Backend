@@ -28,6 +28,7 @@ class NoticeSerializer(serializers.ModelSerializer):
     attendance_set = _NoticeAttendanceSerializer(many=True, help_text='투표현황 목록')
     attendance_voted_count = serializers.IntegerField(help_text='투표에 참여한 인원 수')
     attendance_count = serializers.IntegerField(help_text='투표 가능한 총 인원 수')
+    is_voted = serializers.NullBooleanField(help_text='사용자의 투표여부', default=None)
 
     class Meta:
         model = Notice
@@ -47,6 +48,7 @@ class NoticeSerializer(serializers.ModelSerializer):
             'attendance_set',
             'attendance_voted_count',
             'attendance_count',
+            'is_voted',
         )
 
 

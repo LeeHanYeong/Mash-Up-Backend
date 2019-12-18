@@ -28,11 +28,17 @@ from .serializers import NoticeSerializer, NoticeCreateUpdateSerializer, Attenda
     )
 )
 class NoticeListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Notice.objects.with_count()
     filterset_class = NoticeFilter
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
     )
+
+    def get_queryset(self):
+        kwargs = {}
+        user = self.request.user
+        if user.is_authenticated:
+            kwargs['user'] = user
+        return Notice.objects.with_count(**kwargs)
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -69,10 +75,16 @@ class NoticeListCreateAPIView(generics.ListCreateAPIView):
     ),
 )
 class NoticeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Notice.objects.with_count()
     permission_classes = (
         NoticeAuthorOrReadOnly,
     )
+
+    def get_queryset(self):
+        kwargs = {}
+        user = self.request.user
+        if user.is_authenticated:
+            kwargs['user'] = user
+        return Notice.objects.with_count(**kwargs)
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
