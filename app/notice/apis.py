@@ -4,6 +4,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, permissions, status
 from rest_framework.generics import get_object_or_404
 
+from .filters import NoticeFilter
 from .models import Notice, Attendance
 from .permissions import NoticeAuthorOrReadOnly, AttendanceUserOrReadOnly
 from .serializers import NoticeSerializer, NoticeCreateUpdateSerializer, AttendanceUpdateSerializer
@@ -28,6 +29,7 @@ from .serializers import NoticeSerializer, NoticeCreateUpdateSerializer, Attenda
 )
 class NoticeListCreateAPIView(generics.ListCreateAPIView):
     queryset = Notice.objects.with_count()
+    filterset_class = NoticeFilter
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
     )

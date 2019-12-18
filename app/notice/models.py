@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import F, Count, Q
 from django_extensions.db.models import TimeStampedModel
 from members.models import Team
+from utils.django.models import Model
 
 User = get_user_model()
 
@@ -32,14 +33,17 @@ class NoticeManager(models.Manager):
         )
 
 
-class Notice(TimeStampedModel):
+class Notice(TimeStampedModel, Model):
     TYPE_ALL, TYPE_TEAM, TYPE_PROJECT = ('all', 'team', 'project')
     TYPE_CHOICES = (
         (TYPE_ALL, '전체 공지'),
         (TYPE_TEAM, '팀별 공지'),
         (TYPE_PROJECT, '프로젝트 공지'),
     )
-    type = models.CharField('공지유형', choices=TYPE_CHOICES, max_length=10)
+    type = models.CharField(
+        '공지유형', choices=TYPE_CHOICES, max_length=10,
+        help_text=Model.choices_help_text(TYPE_CHOICES),
+    )
     team = models.ForeignKey(
         Team, verbose_name='팀', on_delete=models.CASCADE,
         related_name='notice_set', blank=True, null=True,

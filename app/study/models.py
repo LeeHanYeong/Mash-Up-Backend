@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.db import models
+from django_extensions.db.models import TimeStampedModel
 
 from members.models import Period, Team
-from utils.django.models import TimeStampedMixin
 
 __all__ = (
     'Study',
@@ -14,7 +14,7 @@ __all__ = (
 )
 
 
-class Study(TimeStampedMixin):
+class Study(TimeStampedModel):
     period = models.ForeignKey(
         Period, verbose_name='기수', on_delete=models.PROTECT,
         related_name='study_set', related_query_name='study',
@@ -37,7 +37,7 @@ class Study(TimeStampedMixin):
         return self.name
 
 
-class StudyMembership(TimeStampedMixin):
+class StudyMembership(TimeStampedModel):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name='스터디원', on_delete=models.CASCADE,
         related_name='membership_set', related_query_name='membership',
@@ -56,7 +56,7 @@ class StudyMembership(TimeStampedMixin):
         return f'{self.study.name} | 유저({self.user.name})'
 
 
-class StudyMeeting(TimeStampedMixin):
+class StudyMeeting(TimeStampedModel):
     study = models.ForeignKey(
         Study, verbose_name='스터디', on_delete=models.PROTECT,
         related_name='meeting_set', related_query_name='meeting',
