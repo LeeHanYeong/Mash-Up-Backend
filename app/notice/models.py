@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import F, Count, Q, OuterRef, Exists
 from django_extensions.db.models import TimeStampedModel
 from members.models import Team
+from utils.django.fields import ChoiceField
 from utils.django.models import Model
 
 User = get_user_model()
@@ -47,10 +48,7 @@ class Notice(TimeStampedModel, Model):
         (TYPE_TEAM, '팀별 공지'),
         (TYPE_PROJECT, '프로젝트 공지'),
     )
-    type = models.CharField(
-        '공지유형', choices=TYPE_CHOICES, max_length=10,
-        help_text=Model.choices_help_text(TYPE_CHOICES),
-    )
+    type = ChoiceField('공지유형', choices=TYPE_CHOICES, max_length=10)
     team = models.ForeignKey(
         Team, verbose_name='팀', on_delete=models.CASCADE,
         related_name='notice_set', blank=True, null=True,
@@ -99,7 +97,7 @@ class AttendanceManager(models.Manager):
         )
 
 
-class Attendance(models.Model):
+class Attendance(Model):
     VOTE_UNSELECTED, VOTE_ATTEND, VOTE_ABSENT, VOTE_LATE = 'unselected', 'attend', 'absent', 'late'
     CHOICES_VOTE = (
         (VOTE_UNSELECTED, '미선택'),
@@ -109,7 +107,7 @@ class Attendance(models.Model):
     )
     notice = models.ForeignKey(Notice, verbose_name='공지', on_delete=models.CASCADE, related_name='attendance_set')
     user = models.ForeignKey(User, verbose_name='사용자', on_delete=models.CASCADE, related_name='attendance_set')
-    vote = models.CharField('투표', choices=CHOICES_VOTE, max_length=15, default=VOTE_UNSELECTED)
+    vote = ChoiceField('투표', choices=CHOICES_VOTE, max_length=15, default=VOTE_UNSELECTED)
     result = models.CharField('실제 참석결과', choices=CHOICES_VOTE, max_length=15, blank=True)
 
     objects = AttendanceManager()
