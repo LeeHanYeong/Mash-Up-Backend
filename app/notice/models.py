@@ -10,9 +10,20 @@ from utils.django.models import Model
 User = get_user_model()
 
 
+class NoticeQuerySet(models.QuerySet):
+    def with_voted(self, user):
+        if user.is_authenticated:
+            is_voted = Attendance.objects.filter(
+                notice=OuterRef('pk'),
+                user=user,
+            ).exclude(vote=Attendance.VOTE_UNSELECTED)
+            return self.annotate(is_voted=Exists(is_voted))
+        return self
+
+
 class NoticeManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().select_related(
+        return NoticeQuerySet(self.model, using=self._db).select_related(
             'author',
             'team',
         ).prefetch_related(
@@ -22,8 +33,8 @@ class NoticeManager(models.Manager):
             'attendance_set__user__user_period_team_set',
         )
 
-    def with_count(self, user=None):
-        qs = self.get_queryset().annotate(
+    def with_count(self):
+        return self.get_queryset().annotate(
             attendance_voted_count=Count(
                 'attendance_set',
                 filter=~Q(
@@ -32,13 +43,6 @@ class NoticeManager(models.Manager):
             ),
             attendance_count=Count('attendance_set'),
         )
-        if user:
-            is_voted = Attendance.objects.filter(
-                notice=OuterRef('pk'),
-                user=user,
-            ).exclude(vote=Attendance.VOTE_UNSELECTED)
-            qs = qs.annotate(is_voted=Exists(is_voted))
-        return qs
 
 
 class Notice(TimeStampedModel, Model):
