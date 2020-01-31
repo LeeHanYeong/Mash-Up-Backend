@@ -1,5 +1,9 @@
+import string
+
 from django.contrib.auth.models import AbstractUser, UserManager as BaseUserManager
 from django.db import models
+from django.utils.crypto import get_random_string
+from django_extensions.db.models import TimeStampedModel
 from phonenumber_field.modelfields import PhoneNumberField
 
 __all__ = (
@@ -141,3 +145,15 @@ class UserPeriodOutcount(models.Model):
 
     def __str__(self):
         return f'{self.user.name} | {self.period.number}기 | 아웃카운트: {self.count}'
+
+
+class EmailValidation(TimeStampedModel):
+    user = models.OneToOneField(
+        User, verbose_name='사용자', on_delete=models.CASCADE, blank=True, null=True)
+    email = models.EmailField('이메일')
+    code = models.CharField('인증코드', max_length=50)
+
+    def save(self, **kwargs):
+        if not self.code:
+            self.code = get_random_string(6, allowed_chars=string.digits)
+        super().save(**kwargs)
