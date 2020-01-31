@@ -1,6 +1,6 @@
 from .base import *
 
-AWS_SECRETS_MANAGER_SECRETS_SECTION = 'mashup:dev'
+AWS_SECRETS_MANAGER_SECRET_SECTION = 'mashup:dev'
 
 DEBUG = True
 ALLOWED_HOSTS += [

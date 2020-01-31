@@ -6,7 +6,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 from .base import *
 
-AWS_SECRETS_MANAGER_SECRETS_SECTION = 'mashup:production'
+AWS_SECRETS_MANAGER_SECRET_SECTION = 'mashup:production'
 
 # AWS
 AWS_STORAGE_BUCKET_NAME = SECRETS['AWS_STORAGE_BUCKET_NAME']

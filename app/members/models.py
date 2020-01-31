@@ -59,6 +59,7 @@ class User(AbstractUser):
     phone_number = PhoneNumberField('전화번호', unique=True, blank=True, null=True)
     name = models.CharField('이름', max_length=50, blank=True)
     email = models.EmailField('이메일', unique=True, blank=True, null=True)
+    birth_date = models.DateField('생일', blank=True, null=True)
     github = models.CharField('GitHub 사용자명', max_length=50, blank=True)
 
     objects = UserManager()
@@ -66,7 +67,11 @@ class User(AbstractUser):
     class Meta:
         verbose_name = '사용자'
         verbose_name_plural = f'{verbose_name} 목록'
-        ordering = ('name',)
+        ordering = ('-pk', 'name')
+        indexes = [
+            models.Index(fields=['name']),
+            models.Index(fields=['birth_date']),
+        ]
 
     def __str__(self):
         email = self.email or '이메일 없음'

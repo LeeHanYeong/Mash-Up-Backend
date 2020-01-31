@@ -29,7 +29,7 @@ class UserAdminProxy(User):
 @admin.register(User)
 @admin.register(UserAdminProxy)
 class UserAdminProxyAdmin(BaseUserAdmin):
-    list_display = ('name', 'username', 'email', 'phone_number', 'is_staff')
+    list_display = ('name', 'username', 'email', 'phone_number', 'birth_date', 'is_staff')
     search_fields = ('name', 'email', 'phone_number',)
 
     readonly_fields = (
@@ -69,6 +69,7 @@ class UserAdminProxyAdmin(BaseUserAdmin):
                     'name',
                     'email',
                     'phone_number',
+                    'birth_date',
                     'github',
                 )
             }),

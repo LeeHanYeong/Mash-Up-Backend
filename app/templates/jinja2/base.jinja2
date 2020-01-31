@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ static('css/bootstrap.min.css') }}">
+    <script src="{{ static('js/jquery.min.js') }}"></script>
+    <script src="{{ static('js/bootstrap.min.js') }}"></script>
+    <script src="{{ static('js/bootstrap.bundle.min.js') }}"></script>
+    <title>{% block title %}Mash-Up{% endblock %}</title>
+</head>
+<body>
+    <div id="wrap">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary mb-2">
+            <a href="{{ url('index') }}" class="navbar-brand">Mash-Up</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <div class="mr-auto"></div>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/leehanyeong/Mash-Up-Backend" target="_blank">Repository</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('schema-redoc') }}" target="_blank">Documentation</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

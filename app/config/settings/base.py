@@ -1,6 +1,6 @@
 import os
 
-from aws_secrets import SECRETS
+from django_secrets import SECRETS
 
 ALLOWED_HOSTS = []
 
@@ -9,9 +9,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
 # django-aws-secrets-manager
-AWS_SECRETS_MANAGER_SECRETS_NAME = 'lhy'
+AWS_SECRETS_MANAGER_SECRET_NAME = 'lhy'
 AWS_SECRETS_MANAGER_PROFILE = 'lhy-secrets-manager'
-AWS_SECRETS_MANAGER_SECRETS_SECTION = 'mashup:base'
+AWS_SECRETS_MANAGER_SECRET_SECTION = 'mashup:base'
 AWS_SECRETS_MANAGER_REGION_NAME = 'ap-northeast-2'
 SECRET_KEY = SECRETS['SECRET_KEY']
 
@@ -217,10 +217,16 @@ MIDDLEWARE = [
 
 TEMPLATES = [
     {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [os.path.join(TEMPLATES_DIR, 'jinja2')],
+        'APP_DIRS': False,
+        'OPTIONS': {
+            'environment': 'config.jinja2.environment',
+        },
+    },
+    {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            TEMPLATES_DIR,
-        ],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -11,7 +11,6 @@ class UserCreationForm(forms.ModelForm):
     class Meta:
         model = User
         fields = (
-            'username',
             'name',
             'email',
             'phone_number',
