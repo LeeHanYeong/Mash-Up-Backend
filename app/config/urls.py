@@ -87,7 +87,7 @@ urlpatterns_views = [
     path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
 urlpatterns_apis = [
-    path('device/', include(router.urls)),
+    # path('device/', include(router.urls)),
     path('members/', include('members.urls')),
     path('notices/', include('notice.urls')),
 ]
