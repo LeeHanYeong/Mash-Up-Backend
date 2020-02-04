@@ -6,6 +6,13 @@ from .models import Notice, Attendance
 class AttendanceInline(admin.TabularInline):
     model = Attendance
     extra = 1
+    readonly_fields = ('user',)
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'user':
+            formfield.choices = formfield.choices
+        return formfield
 
 
 @admin.register(Notice)
