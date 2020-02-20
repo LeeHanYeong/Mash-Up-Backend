@@ -73,6 +73,18 @@ class NoticeCreateUpdateSerializer(serializers.ModelSerializer):
             'user_pk_list',
         )
 
+    def __init__(self, *args, **kwargs):
+        # user_pk_list내부의 값이 int가 아닌 dict(JSON object)로 온 경우, 이를 pk로 변환
+        data_user_pk_list = kwargs['data'].get('user_pk_list')
+        for index, data_user_pk in enumerate(data_user_pk_list):
+            if isinstance(data_user_pk, dict):
+                kwargs['data']['user_pk_list'][index] = data_user_pk['pk']
+
+        data_author = kwargs['data'].get('author')
+        if isinstance(data_author, dict):
+            kwargs['data']['author'] = kwargs['data'].pop('author')['pk']
+        super().__init__(*args, **kwargs)
+
     def validate_user_pk_list(self, pk_list):
         if User.objects.filter(pk__in=pk_list).count() != len(pk_list):
             invalid_user_pk_list = []
@@ -115,4 +127,6 @@ class NoticeCreateUpdateSerializer(serializers.ModelSerializer):
             return notice
 
     def to_representation(self, instance):
+        # attendance_voted_count항목의 annotate처리
+        instance = Notice.objects.with_count().get(pk=instance.pk)
         return NoticeSerializer(instance).data

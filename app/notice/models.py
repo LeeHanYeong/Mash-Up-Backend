@@ -20,6 +20,17 @@ class NoticeQuerySet(models.QuerySet):
             return self.annotate(is_voted=Exists(is_voted))
         return self
 
+    def with_count(self):
+        return self.annotate(
+            attendance_voted_count=Count(
+                'attendance_set',
+                filter=~Q(
+                    attendance_set__vote=Attendance.VOTE_UNSELECTED
+                )
+            ),
+            attendance_count=Count('attendance_set'),
+        )
+
 
 class NoticeManager(models.Manager):
     def get_queryset(self):
@@ -33,16 +44,11 @@ class NoticeManager(models.Manager):
             'attendance_set__user__user_period_team_set',
         )
 
+    def with_voted(self):
+        return self.get_queryset().with_voted()
+
     def with_count(self):
-        return self.get_queryset().annotate(
-            attendance_voted_count=Count(
-                'attendance_set',
-                filter=~Q(
-                    attendance_set__vote=Attendance.VOTE_UNSELECTED
-                )
-            ),
-            attendance_count=Count('attendance_set'),
-        )
+        return self.get_queryset().with_count()
 
 
 class Notice(TimeStampedModel, Model):
