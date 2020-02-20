@@ -65,7 +65,7 @@ AUTHENTICATION_BACKENDS = [
 
 # django-push-notifications
 PUSH_NOTIFICATIONS_SETTINGS = {
-
+    'FCM_API_KEY': SECRETS['FCM_API_KEY'],
 }
 
 # django-modeladmin-reorder
