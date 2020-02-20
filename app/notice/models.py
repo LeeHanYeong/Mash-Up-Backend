@@ -2,7 +2,11 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import F, Count, Q, OuterRef, Exists
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django_extensions.db.models import TimeStampedModel
+from push_notifications.models import Device, GCMDevice, APNSDevice
+
 from members.models import Team
 from utils.django.fields import ChoiceField
 from utils.django.models import Model
@@ -135,3 +139,12 @@ class Attendance(Model):
             user=self.user.name,
             vote=self.get_vote_display(),
         )
+
+
+@receiver(post_save, sender=Notice)
+def send_push(sender, instance, created, **kwargs):
+    message = f'"{instance.title}" 공지가 등록되었습니다'
+    gcm = GCMDevice.objects.all()
+    apns = APNSDevice.objects.all()
+    gcm.send_message(message)
+    apns.send_message(message)

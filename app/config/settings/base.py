@@ -22,7 +22,6 @@ AWS_DEFAULT_ACL = SECRETS['AWS_DEFAULT_ACL']
 AWS_BUCKET_ACL = SECRETS['AWS_BUCKET_ACL']
 AWS_AUTO_CREATE_BUCKET = SECRETS['AWS_AUTO_CREATE_BUCKET']
 AWS_S3_FILE_OVERWRITE = SECRETS['AWS_S3_FILE_OVERWRITE']
-AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_REGION_NAME = 'ap-northeast-2'
 
 # django-dbbackup
@@ -65,10 +64,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # django-push-notifications
-# PUSH_NOTIFICATIONS_SETTINGS = {
-#     'WP_PRIVATE_KEY': os.path.join(SECRETS_DIR, 'private_key.pem'),
-#     'WP_CLAIMS': {'sub': 'mailto: dev@lhy.kr'},
-# }
+PUSH_NOTIFICATIONS_SETTINGS = {
+
+}
 
 # django-modeladmin-reorder
 ADMIN_REORDER = (
@@ -93,6 +91,7 @@ ADMIN_REORDER = (
     )},
 
     'auth',
+    'push_notifications',
 )
 
 # DRF
@@ -125,9 +124,9 @@ REST_FRAMEWORK = {
 
 # drf-yasg
 BASIC_DESCRIPTION = '''
-base64로 인코딩된 사용자ID/비밀번호 쌍을 Header에 전달
+base64로 인코딩된 **사용자ID/비밀번호** 쌍을 Header에 전달\n
 HTTP Request의 Header `Authorization`에 
-`Basic <base64로 인코딩된 "username:password" 문자열>`값을 넣어 전송
+`Basic <base64로 인코딩된 "username:password" 문자열>`값을 넣어 전송\n
 (개발시 일일이 토큰 발급필요없이 편하게 사용 가능)
 
 ```
@@ -146,7 +145,7 @@ Authorization: Token fs8943eu342cf79d8933jkd
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Basic': {
-            'type': 'HTTP Basic Auth(RFC 7617)',
+            'type': 'HTTP Basic Auth (RFC 7617)',
             'description': BASIC_DESCRIPTION,
         },
         'Token': {
