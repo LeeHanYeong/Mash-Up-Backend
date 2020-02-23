@@ -33,11 +33,11 @@ pytest-django = "^3.7.0"
 model_bakery = "^1.0.1"
 django-dbbackup = "<3.2"
 django-secrets-manager = "^0.1.10"
-openpyxl = "^3.0.3"
 
 [tool.poetry.dev-dependencies]
 django-debug-toolbar = "^2.0"
 notebook = "^6.0.2"
+openpyxl = "^3.0.3"
 
 [build-system]
 requires = ["poetry>=0.12"]

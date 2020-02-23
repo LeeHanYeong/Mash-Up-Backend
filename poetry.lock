@@ -80,10 +80,10 @@ description = "The AWS SDK for Python"
 name = "boto3"
 optional = false
 python-versions = "*"
-version = "1.12.3"
+version = "1.12.5"
 
 [package.dependencies]
-botocore = ">=1.15.3,<1.16.0"
+botocore = ">=1.15.5,<1.16.0"
 jmespath = ">=0.7.1,<1.0.0"
 s3transfer = ">=0.3.0,<0.4.0"
 
@@ -93,7 +93,7 @@ description = "Low-level, data-driven core of boto 3."
 name = "botocore"
 optional = false
 python-versions = "*"
-version = "1.15.3"
+version = "1.15.5"
 
 [package.dependencies]
 docutils = ">=0.10,<0.16"
@@ -459,7 +459,7 @@ python-versions = ">=2.7"
 version = "0.3"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "An implementation of lxml.xmlfile for the standard library"
 name = "et-xmlfile"
 optional = false
@@ -636,7 +636,7 @@ python-versions = "*"
 version = "1.1.0"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Julian dates from proleptic Gregorian and Julian calendars."
 name = "jdcal"
 optional = false
@@ -853,7 +853,7 @@ signals = ["blinker"]
 signedtoken = ["cryptography", "pyjwt (>=1.0.0)"]
 
 [[package]]
-category = "main"
+category = "dev"
 description = "A Python library to read/write Excel 2010 xlsx/xlsm files"
 name = "openpyxl"
 optional = false
@@ -1372,7 +1372,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "e89007218c810477e9918145092c21cc85bf40cd7400c9b474a67fc99993f651"
+content-hash = "594ebd1a9775ea42d856dbdeaedceddc8e2b859c9533bd6410c77b3f9bdcc5da"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1404,12 +1404,12 @@ bleach = [
     {file = "bleach-3.1.1.tar.gz", hash = "sha256:aa8b870d0f46965bac2c073a93444636b0e1ca74e9777e34f03dd494b8a59d48"},
 ]
 boto3 = [
-    {file = "boto3-1.12.3-py2.py3-none-any.whl", hash = "sha256:4df9e5bca38488d55f6ead4bd02702c83bf56e11c4dfde7a759c2398f2cadff6"},
-    {file = "boto3-1.12.3.tar.gz", hash = "sha256:c222c1d9301cefb1af7f7a946c48d7c66f404865f9f1951c8540499b5ce71d43"},
+    {file = "boto3-1.12.5-py2.py3-none-any.whl", hash = "sha256:599608a8ed50dc184e83852e3050e6997d7825b404a6e3612c27425e4f12ec10"},
+    {file = "boto3-1.12.5.tar.gz", hash = "sha256:627a0c2366e420383065d9b191fa90a315a4d394fd007c2a85cfa5afa93ba974"},
 ]
 botocore = [
-    {file = "botocore-1.15.3-py2.py3-none-any.whl", hash = "sha256:0442da02dffa31055accd83572beb094018b97063800bd0491437a32b4f360a2"},
-    {file = "botocore-1.15.3.tar.gz", hash = "sha256:348d7e69659ef8cde2712becf270dc703af7aee07757f57559b3933c66aefee7"},
+    {file = "botocore-1.15.5-py2.py3-none-any.whl", hash = "sha256:8c9fa943e1890b44a7f31be2654cd4f4f88e634adadb931b0f298f1cf03a52a4"},
+    {file = "botocore-1.15.5.tar.gz", hash = "sha256:9de7885e9e9d6dbc30b9846d7edd8f98251db7f00395a6f4cfd765efc7098bdb"},
 ]
 certifi = [
     {file = "certifi-2019.11.28-py2.py3-none-any.whl", hash = "sha256:017c25db2a153ce562900032d5bc68e9f191e44e9a0f762f373977de9df1fbb3"},
