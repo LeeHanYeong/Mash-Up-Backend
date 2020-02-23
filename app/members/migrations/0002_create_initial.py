@@ -13,7 +13,7 @@ def forwards_func(apps, schema_editor):
     for team_name in team_name_list:
         Team.objects.using(db_alias).create(name=team_name)
 
-    period_number_list = [1, 2, 3, 4, 5, 6, 7, 8]
+    period_number_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     for period_number in period_number_list:
         Period.objects.using(db_alias).create(number=period_number)
 

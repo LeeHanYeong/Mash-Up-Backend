@@ -94,6 +94,7 @@ class UserPeriodTeamManager(models.Manager):
 
 
 class UserPeriodTeam(models.Model):
+    is_active = models.BooleanField('기수 활동여부', help_text='해당기수 중도 탈퇴시 False처리', default=True)
     user = models.ForeignKey(
         User, verbose_name='사용자', on_delete=models.CASCADE,
         related_name='user_period_team_set', related_query_name='user_period_team',
@@ -112,9 +113,12 @@ class UserPeriodTeam(models.Model):
     class Meta:
         verbose_name = '사용자 활동기수 정보'
         verbose_name_plural = f'{verbose_name} 목록'
-        unique_together = (
-            ('user', 'period', 'team'),
-        )
+        indexes = [
+            models.Index(fields=['is_active']),
+        ]
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'period', 'team'], name='unique_user_period_team'),
+        ]
 
     def __str__(self):
         return str(self.pk)
@@ -140,9 +144,12 @@ class UserPeriodOutcount(models.Model):
     class Meta:
         verbose_name = '사용자 활동기수별 아웃카운트 정보'
         verbose_name_plural = f'{verbose_name} 목록'
-        unique_together = (
-            ('user', 'period'),
-        )
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'period'], name='unique_user_period'),
+        ]
+        indexes = [
+            models.Index(fields=['count']),
+        ]
 
     def __str__(self):
         return f'{self.user.name} | {self.period.number}기 | 아웃카운트: {self.count}'
