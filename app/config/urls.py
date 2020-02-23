@@ -13,6 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import importlib
+import inspect
 import os
 import re
 from collections import OrderedDict
@@ -33,11 +35,43 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg.views import get_schema_view
 from push_notifications.api.rest_framework import GCMDeviceAuthorizedViewSet, APNSDeviceAuthorizedViewSet
 from rest_framework import permissions
+from rest_framework.exceptions import APIException
 from rest_framework.routers import SimpleRouter
 
-from . import views
+from . import views, apis
 
 admin.site.site_header = 'Mash-Up 관리사이트'
+
+exceptions = []
+drf_exceptions_module = importlib.import_module('utils.drf.exceptions')
+for attr_name in dir(drf_exceptions_module):
+    attr = getattr(drf_exceptions_module, attr_name)
+    if inspect.isclass(attr) and issubclass(attr, APIException) and attr is not APIException:
+        exceptions.append(attr)
+DRF_EXCEPTION_CASES = [
+    {
+        'name': exc.__name__,
+        'status': exc.status_code,
+        'code': exc.default_code,
+        'detail': exc.default_detail,
+    } for exc in exceptions
+]
+DRF_EXCEPTION_DESCRIPTION = '''
+# Exceptions
+{exceptions}
+'''.format(
+    exceptions='\n\n'.join(
+        ['### {name}  \n'
+         'status: {status}  \n'
+         'code: `{code}`  \n'
+         'detail: {detail}'.format(
+            name=exc['name'],
+            status=exc['status'],
+            code=exc['code'],
+            detail=exc['detail']
+        ) for exc in DRF_EXCEPTION_CASES]
+    )
+)
 
 
 class SchemaGenerator(OpenAPISchemaGenerator):
@@ -59,7 +93,7 @@ BaseSchemaView = get_schema_view(
     openapi.Info(
         title='Mash-Up API',
         default_version='v1',
-        description='Mash-Up API Documentation',
+        description='Mash-Up API Documentation\n' + DRF_EXCEPTION_DESCRIPTION,
         contact=openapi.Contact(email='dev@lhy.kr'),
     ),
     public=True,
@@ -113,6 +147,7 @@ urlpatterns_views = [
     path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
 urlpatterns_apis = [
+    path('push/fcm/test/', apis.FCMTestAPIView.as_view()),
     path('push/', include(push_router.urls)),
     path('members/', include('members.urls')),
     path('notices/', include('notice.urls')),

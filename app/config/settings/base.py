@@ -1,12 +1,19 @@
+import importlib
+import inspect
 import os
 
 from django_secrets import SECRETS
+from rest_framework.exceptions import APIException
 
 ALLOWED_HOSTS = []
 
 # Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ROOT_DIR = os.path.dirname(BASE_DIR)
+LOG_DIR = os.path.join(ROOT_DIR, '.log')
+LOG_SIGNAL_DIR = os.path.join(LOG_DIR, 'signal')
+os.makedirs(LOG_DIR, exist_ok=True)
+os.makedirs(LOG_SIGNAL_DIR, exist_ok=True)
 
 # django-aws-secrets-manager
 AWS_SECRETS_MANAGER_SECRET_NAME = 'lhy'
@@ -66,6 +73,7 @@ AUTHENTICATION_BACKENDS = [
 # django-push-notifications
 PUSH_NOTIFICATIONS_SETTINGS = {
     'FCM_API_KEY': SECRETS['FCM_API_KEY'],
+    'UPDATE_ON_DUPLICATE_REG_ID': True,
 }
 
 # django-modeladmin-reorder
@@ -119,7 +127,7 @@ REST_FRAMEWORK = {
     'JSON_UNDERSCOREIZE': {
         'no_underscore_before_number': True,
     },
-    'EXCEPTION_HANDLER': 'utils.drf.exceptions.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'utils.drf.exceptions.rest_exception_handler',
 }
 
 # drf-yasg
@@ -259,3 +267,73 @@ TIME_ZONE = 'Asia/Seoul'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'formatters': {
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] {message}',
+            'style': '{',
+        },
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s',
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'signal': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(LOG_SIGNAL_DIR, 'signal.log'),
+            'when': 'midnight',
+            'backupCount': '10',
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'signal': {
+            'handlers': ['signal', 'console'],
+            'level': 'INFO',
+        },
+        'django': {
+            'handlers': ['console', 'mail_admins'],
+            'level': 'INFO',
+        },
+        'django.server': {
+            'handlers': ['django.server'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    }
+}

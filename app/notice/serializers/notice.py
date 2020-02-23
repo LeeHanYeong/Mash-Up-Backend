@@ -1,8 +1,9 @@
 from django.db import transaction
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from rest_framework.fields import empty
 
 from members.serializers import TeamSerializer, UserSerializer
-from utils.drf.exceptions import ValidationError
 from ..models import Notice, User, Attendance
 
 
@@ -21,6 +22,11 @@ class _NoticeAttendanceSerializer(serializers.ModelSerializer):
 
 
 class NoticeSerializer(serializers.ModelSerializer):
+    OPTIONAL_FIELDS = (
+        'attendance_voted_count',
+        'attendance_count',
+        'is_voted',
+    )
     type_display = serializers.CharField(source='get_type_display')
     team = TeamSerializer()
     author = UserSerializer()
@@ -29,6 +35,12 @@ class NoticeSerializer(serializers.ModelSerializer):
     attendance_voted_count = serializers.IntegerField(help_text='투표에 참여한 인원 수')
     attendance_count = serializers.IntegerField(help_text='투표 가능한 총 인원 수')
     is_voted = serializers.NullBooleanField(help_text='사용자의 투표여부', default=None)
+
+    def __init__(self, instance=None, data=empty, **kwargs):
+        for optional_field in self.OPTIONAL_FIELDS:
+            if not hasattr(instance, optional_field):
+                self.fields.pop(optional_field)
+        super().__init__(instance, data, **kwargs)
 
     class Meta:
         model = Notice
@@ -75,14 +87,15 @@ class NoticeCreateUpdateSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         # user_pk_list내부의 값이 int가 아닌 dict(JSON object)로 온 경우, 이를 pk로 변환
-        data_user_pk_list = kwargs['data'].get('user_pk_list')
-        for index, data_user_pk in enumerate(data_user_pk_list):
-            if isinstance(data_user_pk, dict):
-                kwargs['data']['user_pk_list'][index] = data_user_pk['pk']
+        if 'data' in kwargs:
+            data_user_pk_list = kwargs['data'].get('user_pk_list')
+            for index, data_user_pk in enumerate(data_user_pk_list):
+                if isinstance(data_user_pk, dict):
+                    kwargs['data']['user_pk_list'][index] = data_user_pk['pk']
 
-        data_author = kwargs['data'].get('author')
-        if isinstance(data_author, dict):
-            kwargs['data']['author'] = kwargs['data'].pop('author')['pk']
+            data_author = kwargs['data'].get('author')
+            if isinstance(data_author, dict):
+                kwargs['data']['author'] = kwargs['data'].pop('author')['pk']
         super().__init__(*args, **kwargs)
 
     def validate_user_pk_list(self, pk_list):

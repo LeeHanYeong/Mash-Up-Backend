@@ -1,9 +1,9 @@
+import logging
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import F, Count, Q, OuterRef, Exists
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django_extensions.db.models import TimeStampedModel
 from push_notifications.models import Device, GCMDevice, APNSDevice
 
@@ -12,6 +12,8 @@ from utils.django.fields import ChoiceField
 from utils.django.models import Model
 
 User = get_user_model()
+
+logger = logging.getLogger(__name__)
 
 
 class NoticeQuerySet(models.QuerySet):
@@ -48,8 +50,8 @@ class NoticeManager(models.Manager):
             'attendance_set__user__user_period_team_set',
         )
 
-    def with_voted(self):
-        return self.get_queryset().with_voted()
+    def with_voted(self, user):
+        return self.get_queryset().with_voted(user)
 
     def with_count(self):
         return self.get_queryset().with_count()
@@ -139,12 +141,3 @@ class Attendance(Model):
             user=self.user.name,
             vote=self.get_vote_display(),
         )
-
-
-@receiver(post_save, sender=Notice)
-def send_push(sender, instance, created, **kwargs):
-    message = f'"{instance.title}" 공지가 등록되었습니다'
-    gcm = GCMDevice.objects.all()
-    apns = APNSDevice.objects.all()
-    gcm.send_message(message)
-    apns.send_message(message)
