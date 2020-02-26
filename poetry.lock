@@ -356,18 +356,6 @@ with_social = ["django-allauth (>=0.25.0)"]
 
 [[package]]
 category = "main"
-description = "Django SecretsManager is custom secret managers for Django"
-name = "django-secrets-manager"
-optional = false
-python-versions = ">3.5"
-version = "0.1.10"
-
-[package.dependencies]
-boto3 = "*"
-django = "*"
-
-[[package]]
-category = "main"
 description = "Support for many storage backends in Django"
 name = "django-storages"
 optional = false
@@ -1372,7 +1360,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "594ebd1a9775ea42d856dbdeaedceddc8e2b859c9533bd6410c77b3f9bdcc5da"
+content-hash = "152ff097ce38932d48617b4943b16683592587108e7c81f81484b6101463e141"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1401,6 +1389,7 @@ backcall = [
     {file = "backcall-0.1.0.zip", hash = "sha256:bbbf4b1e5cd2bdb08f915895b51081c041bac22394fdfcfdfbe9f14b77c08bf2"},
 ]
 bleach = [
+    {file = "bleach-3.1.1-py2.py3-none-any.whl", hash = "sha256:44f69771e2ac81ff30d929d485b7f9919f3ad6d019b6b20c74f3b8687c3f70df"},
     {file = "bleach-3.1.1.tar.gz", hash = "sha256:aa8b870d0f46965bac2c073a93444636b0e1ca74e9777e34f03dd494b8a59d48"},
 ]
 boto3 = [
@@ -1564,10 +1553,6 @@ django-push-notifications = [
 ]
 django-rest-auth = [
     {file = "django-rest-auth-0.9.5.tar.gz", hash = "sha256:f11e12175dafeed772f50d740d22caeab27e99a3caca24ec65e66a8d6de16571"},
-]
-django-secrets-manager = [
-    {file = "django-secrets-manager-0.1.10.tar.gz", hash = "sha256:8f6b3e64bd7dcc499b633a94a9b2be4144d24247db959a90965a72d7906191f5"},
-    {file = "django_secrets_manager-0.1.10-py3-none-any.whl", hash = "sha256:ce760d540f68f5ebc1a9c575f5c29b0c10e9528bc2945504418deef2a2c3f1e8"},
 ]
 django-storages = [
     {file = "django-storages-1.9.1.tar.gz", hash = "sha256:a59e9923cbce7068792f75344ed7727021ee4ac20f227cf17297d0d03d141e91"},

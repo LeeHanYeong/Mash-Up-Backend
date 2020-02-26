@@ -1,3 +1,6 @@
+app/django_secrets
+app/dump.sql
+/.dump
 /.temp
 /.secrets
 *.ipynb
