@@ -1,16 +1,25 @@
-"""
-WSGI config for config project.
-
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/2.2/howto/deployment/wsgi/
-"""
-
+import importlib
 import os
 
-from django.core.wsgi import get_wsgi_application
+SETTINGS_MODULE = os.environ.get('DJANGO_SETTINGS_MODULE')
+SETTINGS_MODULE_CASES = [
+    {
+        'keys': [
+            None,
+            'config.settings',
+            'config.settings.local',
+            'config.settings.dev'
+        ],
+        'module': 'config.wsgi.dev',
+    },
+    {
+        'keys': [
+            'config.settings.production'
+        ],
+        'module': 'config.wsgi.production',
+    },
+]
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-
-application = get_wsgi_application()
+for case in SETTINGS_MODULE_CASES:
+    if SETTINGS_MODULE in case['keys']:
+        globals().update(importlib.import_module(case['module']).__dict__)

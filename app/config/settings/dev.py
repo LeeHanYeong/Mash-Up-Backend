@@ -1,5 +1,6 @@
 from .base import *
 
+DJANGO_SECRETS_USE_CACHE = True
 AWS_SECRETS_MANAGER_SECRET_SECTION = 'mashup:dev'
 
 DEBUG = True

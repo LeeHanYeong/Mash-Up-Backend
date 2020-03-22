@@ -1,21 +1,23 @@
-import importlib
-import inspect
 import os
 
+from dotenv import load_dotenv
+
 from django_secrets import SECRETS
-from rest_framework.exceptions import APIException
 
 ALLOWED_HOSTS = []
 
 # Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ROOT_DIR = os.path.dirname(BASE_DIR)
+ENV_PATH = os.path.join(ROOT_DIR, '.env')
 LOG_DIR = os.path.join(ROOT_DIR, '.log')
 LOG_SIGNAL_DIR = os.path.join(LOG_DIR, 'signal')
 os.makedirs(LOG_DIR, exist_ok=True)
 os.makedirs(LOG_SIGNAL_DIR, exist_ok=True)
+load_dotenv(ENV_PATH)
 
 # django-aws-secrets-manager
+DJANGO_SECRETS_CACHE_PATH = os.path.join(ROOT_DIR, 'secrets.json')
 AWS_SECRETS_MANAGER_SECRET_NAME = 'lhy'
 AWS_SECRETS_MANAGER_PROFILE = 'lhy-secrets-manager'
 AWS_SECRETS_MANAGER_SECRET_SECTION = 'mashup:base'
@@ -163,6 +165,9 @@ SWAGGER_SETTINGS = {
     }
 }
 
+# django-safedelete
+SAFE_DELETE_INTERPRET_UNDELETED_OBJECTS_AS_CREATED = True
+
 # Other modules
 ROOT_URLCONF = 'config.urls'
 WSGI_APPLICATION = 'config.wsgi.application'
@@ -197,6 +202,8 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'phonenumber_field',
     'push_notifications',
+    'safedelete',
+    'simple_history',
 ]
 DRF_APPS = [
     'drf_yasg',
@@ -220,6 +227,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'admin_reorder.middleware.ModelAdminReorder',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 TEMPLATES = [
@@ -320,11 +328,11 @@ LOGGING = {
     'loggers': {
         '': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
         },
         'signal': {
             'handlers': ['signal', 'console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
         },
         'django': {
             'handlers': ['console', 'mail_admins'],

@@ -2,7 +2,14 @@
 import os
 import sys
 
+from dotenv import load_dotenv
+
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ENV_PATH = os.path.join(ROOT_DIR, '.env')
+
+
 if __name__ == '__main__':
+    load_dotenv(ENV_PATH)
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
     try:
         from django.core.management import execute_from_command_line

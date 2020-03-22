@@ -1,17 +1,18 @@
 import logging
 
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import F, Count, Q, OuterRef, Exists
 from django_extensions.db.models import TimeStampedModel
 from push_notifications.models import Device, GCMDevice, APNSDevice
+from safedelete import SOFT_DELETE_CASCADE
+from safedelete.models import SafeDeleteModel
+from simple_history.models import HistoricalRecords
 
 from members.models import Team
 from utils.django.fields import ChoiceField
 from utils.django.models import Model
-
-User = get_user_model()
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +58,14 @@ class NoticeManager(models.Manager):
         return self.get_queryset().with_count()
 
 
-class Notice(TimeStampedModel, Model):
+class Notice(SafeDeleteModel, TimeStampedModel, Model):
+    _safedelete_policy = SOFT_DELETE_CASCADE
+    _history = HistoricalRecords()
+    _history_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL,
+        related_name='history_notice_set', related_query_name='history_notice',
+    )
+
     TYPE_ALL, TYPE_TEAM, TYPE_PROJECT = ('all', 'team', 'project')
     TYPE_CHOICES = (
         (TYPE_ALL, '전체 공지'),
@@ -71,7 +79,7 @@ class Notice(TimeStampedModel, Model):
     )
     title = models.CharField('공지명', max_length=100)
     author = models.ForeignKey(
-        User, verbose_name='작성자', on_delete=models.SET_NULL,
+        settings.AUTH_USER_MODEL, verbose_name='작성자', on_delete=models.SET_NULL,
         related_name='notice_set', null=True,
     )
     start_at = models.DateTimeField('일시', blank=True, null=True, db_index=True)
@@ -81,8 +89,8 @@ class Notice(TimeStampedModel, Model):
     description = models.TextField('설명', blank=True)
 
     user_set = models.ManyToManyField(
-        User, verbose_name='투표할 사용자 목록',
-        through='Attendance', related_name='user_notice_set', blank=True,
+        settings.AUTH_USER_MODEL, verbose_name='투표할 사용자 목록',
+        through='Attendance', through_fields=('notice', 'user'), related_name='user_notice_set', blank=True,
     )
 
     objects = NoticeManager()
@@ -113,7 +121,14 @@ class AttendanceManager(models.Manager):
         )
 
 
-class Attendance(Model):
+class Attendance(SafeDeleteModel, Model):
+    _safedelete_policy = SOFT_DELETE_CASCADE
+    _history = HistoricalRecords()
+    _history_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL,
+        related_name='history_attendance_set', related_query_name='history_attendance',
+    )
+
     VOTE_UNSELECTED, VOTE_ATTEND, VOTE_ABSENT, VOTE_LATE = 'unselected', 'attend', 'absent', 'late'
     CHOICES_VOTE = (
         (VOTE_UNSELECTED, '미선택'),
@@ -122,7 +137,8 @@ class Attendance(Model):
         (VOTE_LATE, '지각'),
     )
     notice = models.ForeignKey(Notice, verbose_name='공지', on_delete=models.CASCADE, related_name='attendance_set')
-    user = models.ForeignKey(User, verbose_name='사용자', on_delete=models.CASCADE, related_name='attendance_set')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, verbose_name='사용자', on_delete=models.CASCADE, related_name='attendance_set')
     vote = ChoiceField('투표', choices=CHOICES_VOTE, max_length=15, default=VOTE_UNSELECTED)
     result = models.CharField('실제 참석결과', choices=CHOICES_VOTE, max_length=15, blank=True)
 

@@ -1,10 +1,13 @@
+from django.contrib.auth import get_user_model
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import empty
 
 from members.serializers import TeamSerializer, UserSerializer
-from ..models import Notice, User, Attendance
+from ..models import Notice, Attendance
+
+User = get_user_model()
 
 
 class _NoticeAttendanceSerializer(serializers.ModelSerializer):

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
 
 from .models import Notice, Attendance
 
@@ -16,14 +17,14 @@ class AttendanceInline(admin.TabularInline):
 
 
 @admin.register(Notice)
-class NoticeAdmin(admin.ModelAdmin):
+class NoticeAdmin(SimpleHistoryAdmin):
     list_display = ('title', 'type', 'team', 'author', 'start_at', 'duration', 'address1', 'address2')
     list_filter = ('type', 'team')
     inlines = [AttendanceInline]
 
 
 @admin.register(Attendance)
-class AttendanceAdmin(admin.ModelAdmin):
+class AttendanceAdmin(SimpleHistoryAdmin):
     list_display = ('notice', 'user', 'vote', 'result')
     list_filter = ('vote', 'result')
     search_fields = ('notice__title', 'user__name')

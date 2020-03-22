@@ -1,5 +1,6 @@
 app/django_secrets
 app/dump.sql
+/secrets.json
 /.dump
 /.temp
 /.secrets
