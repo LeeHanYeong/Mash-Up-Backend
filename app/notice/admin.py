@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from safedelete.admin import SafeDeleteAdmin, highlight_deleted
 from simple_history.admin import SimpleHistoryAdmin
 
+from members.models import Period
 from .models import Notice, Attendance
 
 User = get_user_model()
@@ -29,13 +30,20 @@ class NoticeAdmin(SafeDeleteAdmin, SimpleHistoryAdmin):
     list_display = (highlight_deleted, 'title', 'type', 'team', 'author', 'start_at', 'duration', 'address1', 'address2')
     list_filter = ('type', 'team') + SafeDeleteAdmin.list_filter
     inlines = [AttendanceInline]
-    readonly_fields = ('_history_user',)
+    readonly_fields = ('author',)
     exclude = ('_history_user',)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'author':
-            kwargs['queryset'] = User.objects.order_by('name')
+        # 기수 기본값 설정
+        if db_field.name == 'period':
+            kwargs['initial'] = Period.objects.order_by('is_current', '-number').first()
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def save_model(self, request, obj, form, change):
+        # 새로 생성되는 경우, author에 request.user등록
+        if not change:
+            obj.author = request.user
+        return super().save_model(request, obj, form, change)
 
 
 @admin.register(Attendance)

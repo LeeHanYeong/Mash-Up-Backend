@@ -65,7 +65,7 @@ class NoticeManager(SafeDeleteManager):
 
 class Notice(SafeDeleteModel, TimeStampedModel, Model):
     _safedelete_policy = SOFT_DELETE_CASCADE
-    _history = HistoricalRecords()
+    _history = HistoricalRecords(table_name='_history_notice', inherit=True)
     _history_user = models.ForeignKey(
         settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL,
         related_name='history_notice_set', related_query_name='history_notice',
@@ -76,6 +76,10 @@ class Notice(SafeDeleteModel, TimeStampedModel, Model):
         (TYPE_ALL, '전체 공지'),
         (TYPE_TEAM, '팀별 공지'),
         (TYPE_PROJECT, '프로젝트 공지'),
+    )
+    period = models.ForeignKey(
+        'members.Period', verbose_name='해당 기수', on_delete=models.CASCADE,
+        blank=True, null=True,
     )
     type = ChoiceField('공지유형', choices=TYPE_CHOICES, max_length=10)
     team = models.ForeignKey(
@@ -117,6 +121,10 @@ class Notice(SafeDeleteModel, TimeStampedModel, Model):
         self.clean()
         super().save()
 
+    def add_attendance_set(self):
+        pass
+
+
 
 class AttendanceManager(models.Manager):
     def get_queryset(self):
@@ -128,7 +136,7 @@ class AttendanceManager(models.Manager):
 
 class Attendance(SafeDeleteModel, Model):
     _safedelete_policy = SOFT_DELETE_CASCADE
-    _history = HistoricalRecords()
+    _history = HistoricalRecords(table_name='_history_attendance', inherit=True)
     _history_user = models.ForeignKey(
         settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL,
         related_name='history_attendance_set', related_query_name='history_attendance',
