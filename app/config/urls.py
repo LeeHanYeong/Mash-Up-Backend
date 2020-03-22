@@ -160,7 +160,7 @@ urlpatterns = [
 ]
 
 SETTINGS_MODULE = os.environ.get('DJANGO_SETTINGS_MODULE')
-if SETTINGS_MODULE in ('config.settings', 'config.settings.dev'):
+if SETTINGS_MODULE in ('config.settings', 'config.settings.local', 'config.settings.dev'):
     try:
         import debug_toolbar
 

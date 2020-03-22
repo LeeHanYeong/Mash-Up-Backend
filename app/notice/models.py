@@ -6,8 +6,10 @@ from django.db import models
 from django.db.models import F, Count, Q, OuterRef, Exists
 from django_extensions.db.models import TimeStampedModel
 from push_notifications.models import Device, GCMDevice, APNSDevice
-from safedelete import SOFT_DELETE_CASCADE
+from safedelete import SOFT_DELETE_CASCADE, DELETED_VISIBLE_BY_PK
+from safedelete.managers import SafeDeleteManager
 from safedelete.models import SafeDeleteModel
+from safedelete.queryset import SafeDeleteQueryset
 from simple_history.models import HistoricalRecords
 
 from members.models import Team
@@ -17,7 +19,10 @@ from utils.django.models import Model
 logger = logging.getLogger(__name__)
 
 
-class NoticeQuerySet(models.QuerySet):
+class NoticeQuerySet(SafeDeleteQueryset):
+    _safedelete_visibility_field = 'pk'
+    _safedelete_visibility = DELETED_VISIBLE_BY_PK
+
     def with_voted(self, user):
         if user.is_authenticated:
             is_voted = Attendance.objects.filter(
@@ -39,7 +44,7 @@ class NoticeQuerySet(models.QuerySet):
         )
 
 
-class NoticeManager(models.Manager):
+class NoticeManager(SafeDeleteManager):
     def get_queryset(self):
         return NoticeQuerySet(self.model, using=self._db).select_related(
             'author',
@@ -62,7 +67,7 @@ class Notice(SafeDeleteModel, TimeStampedModel, Model):
     _safedelete_policy = SOFT_DELETE_CASCADE
     _history = HistoricalRecords()
     _history_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL,
+        settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL,
         related_name='history_notice_set', related_query_name='history_notice',
     )
 
@@ -125,7 +130,7 @@ class Attendance(SafeDeleteModel, Model):
     _safedelete_policy = SOFT_DELETE_CASCADE
     _history = HistoricalRecords()
     _history_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL,
+        settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL,
         related_name='history_attendance_set', related_query_name='history_attendance',
     )
 
