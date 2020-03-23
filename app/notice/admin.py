@@ -26,12 +26,11 @@ class AttendanceInline(admin.TabularInline):
 
 
 @admin.register(Notice)
-class NoticeAdmin(SafeDeleteAdmin, SimpleHistoryAdmin):
-    list_display = (highlight_deleted, 'title', 'type', 'team', 'author', 'start_at', 'duration', 'address1', 'address2')
-    list_filter = ('type', 'team') + SafeDeleteAdmin.list_filter
+class NoticeAdmin(SimpleHistoryAdmin):
+    list_display = ('title', 'type', 'team', 'author', 'start_at', 'duration', 'address1', 'address2')
+    list_filter = ('type', 'team')
     inlines = [AttendanceInline]
     readonly_fields = ('author',)
-    exclude = ('_history_user',)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         # 기수 기본값 설정

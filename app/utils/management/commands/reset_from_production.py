@@ -1,10 +1,8 @@
 import os
 import subprocess
-from copy import deepcopy
 
 from django.conf import settings
 from django.core.management import BaseCommand
-
 from django_secrets import AWSSecretsManagerSecrets
 
 

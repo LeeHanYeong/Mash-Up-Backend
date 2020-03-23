@@ -57,9 +57,7 @@ class User(AbstractUser):
     first_name = None
     last_name = None
     period_set = models.ManyToManyField(
-        Period, verbose_name='활동기수', blank=True,
-        through='UserPeriodTeam', related_name='users', related_query_name='user',
-    )
+        Period, verbose_name='활동기수', through='UserPeriodTeam', blank=True)
     phone_number = PhoneNumberField('전화번호', unique=True, blank=True, null=True)
     name = models.CharField('이름', max_length=50, blank=True)
     email = models.EmailField('이메일', unique=True, blank=True, null=True)

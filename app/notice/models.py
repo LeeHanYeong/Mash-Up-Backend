@@ -1,15 +1,13 @@
 import logging
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import models, transaction
 from django.db.models import F, Count, Q, OuterRef, Exists
 from django_extensions.db.models import TimeStampedModel
 from push_notifications.models import Device, GCMDevice, APNSDevice
-from safedelete import SOFT_DELETE_CASCADE, DELETED_VISIBLE_BY_PK
-from safedelete.managers import SafeDeleteManager
 from safedelete.models import SafeDeleteModel
-from safedelete.queryset import SafeDeleteQueryset
 from simple_history.models import HistoricalRecords
 
 from members.models import Team
@@ -17,12 +15,10 @@ from utils.django.fields import ChoiceField
 from utils.django.models import Model
 
 logger = logging.getLogger(__name__)
+User = get_user_model()
 
 
-class NoticeQuerySet(SafeDeleteQueryset):
-    _safedelete_visibility_field = 'pk'
-    _safedelete_visibility = DELETED_VISIBLE_BY_PK
-
+class NoticeQuerySet(models.QuerySet):
     def with_voted(self, user):
         if user.is_authenticated:
             is_voted = Attendance.objects.filter(
@@ -44,7 +40,7 @@ class NoticeQuerySet(SafeDeleteQueryset):
         )
 
 
-class NoticeManager(SafeDeleteManager):
+class NoticeManager(models.Manager):
     def get_queryset(self):
         return NoticeQuerySet(self.model, using=self._db).select_related(
             'author',
@@ -63,13 +59,8 @@ class NoticeManager(SafeDeleteManager):
         return self.get_queryset().with_count()
 
 
-class Notice(SafeDeleteModel, TimeStampedModel, Model):
-    _safedelete_policy = SOFT_DELETE_CASCADE
-    _history = HistoricalRecords(table_name='_history_notice', inherit=True)
-    _history_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL,
-        related_name='history_notice_set', related_query_name='history_notice',
-    )
+class Notice(Model):
+    _history = HistoricalRecords(table_name='_history_notice')
 
     TYPE_ALL, TYPE_TEAM, TYPE_PROJECT = ('all', 'team', 'project')
     TYPE_CHOICES = (
@@ -122,8 +113,14 @@ class Notice(SafeDeleteModel, TimeStampedModel, Model):
         super().save()
 
     def add_attendance_set(self):
-        pass
+        q = Q(user_period_team__period=self.period)
+        if self.team:
+            q = q & Q(user_period_team__team=self.team)
+        users = User.objects.filter(q)
 
+        with transaction.atomic():
+            for user in users:
+                self.attendance_set.get_or_create(user=user)
 
 
 class AttendanceManager(models.Manager):
@@ -134,13 +131,8 @@ class AttendanceManager(models.Manager):
         )
 
 
-class Attendance(SafeDeleteModel, Model):
-    _safedelete_policy = SOFT_DELETE_CASCADE
-    _history = HistoricalRecords(table_name='_history_attendance', inherit=True)
-    _history_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL,
-        related_name='history_attendance_set', related_query_name='history_attendance',
-    )
+class Attendance(Model):
+    _history = HistoricalRecords(table_name='_history_attendance')
 
     VOTE_UNSELECTED, VOTE_ATTEND, VOTE_ABSENT, VOTE_LATE = 'unselected', 'attend', 'absent', 'late'
     CHOICES_VOTE = (
