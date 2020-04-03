@@ -3,6 +3,7 @@ from django.db import models
 from django_extensions.db.models import TimeStampedModel
 
 from members.models import Period, Team
+from utils.django.models import Model
 
 __all__ = (
     'Study',
@@ -82,7 +83,7 @@ class StudyMeeting(TimeStampedModel):
         return self.study.meeting_set.filter(pk__lte=self.pk).count()
 
 
-class StudyMeetingUserActivity(models.Model):
+class StudyMeetingUserActivity(Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name='스터디원', on_delete=models.PROTECT,
         related_name='meeting_user_activity_set', related_query_name='meeting_user_activity',
@@ -104,7 +105,7 @@ class StudyMeetingUserActivity(models.Model):
         )
 
 
-class StudyMeetingFineCategory(models.Model):
+class StudyMeetingFineCategory(Model):
     name = models.CharField('벌금 카테고리명', max_length=100)
 
     class Meta:
@@ -115,7 +116,7 @@ class StudyMeetingFineCategory(models.Model):
         return self.name
 
 
-class StudyMeetingFine(models.Model):
+class StudyMeetingFine(Model):
     meeting_user_activity = models.ForeignKey(
         StudyMeetingUserActivity, verbose_name='스터디 모임 활동정보', on_delete=models.CASCADE,
         related_name='fine_set', related_query_name='fine',

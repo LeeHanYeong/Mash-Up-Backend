@@ -5,12 +5,13 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.fields import empty
 
 from members.serializers import TeamSerializer, UserSerializer
+from utils.drf.serializers import ModelSerializer
 from ..models import Notice, Attendance
 
 User = get_user_model()
 
 
-class _NoticeAttendanceSerializer(serializers.ModelSerializer):
+class _NoticeAttendanceSerializer(ModelSerializer):
     user = UserSerializer()
     vote_display = serializers.CharField(source='get_vote_display')
 
@@ -24,7 +25,7 @@ class _NoticeAttendanceSerializer(serializers.ModelSerializer):
         )
 
 
-class NoticeSerializer(serializers.ModelSerializer):
+class NoticeSerializer(ModelSerializer):
     OPTIONAL_FIELDS = (
         'attendance_voted_count',
         'attendance_count',
@@ -67,7 +68,7 @@ class NoticeSerializer(serializers.ModelSerializer):
         )
 
 
-class NoticeCreateUpdateSerializer(serializers.ModelSerializer):
+class NoticeCreateUpdateSerializer(ModelSerializer):
     user_pk_list = serializers.ListField(
         child=serializers.IntegerField(), write_only=True,
         help_text='이 공지사항에 참석여부 투표할 사용자 PK List'

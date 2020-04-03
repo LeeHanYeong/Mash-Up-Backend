@@ -1,8 +1,8 @@
-from django.db import models
+from django.db.models import Model as DefaultModel
 from safedelete.models import SafeDeleteModel
 
 
-class Model(models.Model):
+class Model(DefaultModel):
     class Meta:
         abstract = True
 

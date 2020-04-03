@@ -6,6 +6,8 @@ from django.utils.crypto import get_random_string
 from django_extensions.db.models import TimeStampedModel
 from phonenumber_field.modelfields import PhoneNumberField
 
+from utils.django.models import Model
+
 __all__ = (
     'Team',
     'Period',
@@ -15,7 +17,7 @@ __all__ = (
 )
 
 
-class Team(models.Model):
+class Team(Model):
     name = models.CharField('팀명', max_length=20)
 
     class Meta:
@@ -26,7 +28,7 @@ class Team(models.Model):
         return f'{self.name}팀'
 
 
-class Period(models.Model):
+class Period(Model):
     is_current = models.BooleanField('현재 기수여부', default=False)
     number = models.PositiveSmallIntegerField('기수')
 
@@ -91,7 +93,7 @@ class UserPeriodTeamManager(models.Manager):
         )
 
 
-class UserPeriodTeam(models.Model):
+class UserPeriodTeam(Model):
     is_active = models.BooleanField('기수 활동여부', help_text='해당기수 중도 탈퇴시 False처리', default=True)
     user = models.ForeignKey(
         User, verbose_name='사용자', on_delete=models.CASCADE,
@@ -128,7 +130,7 @@ class UserPeriodTeam(models.Model):
         self.user.user_period_outcount_set.get_or_create(period=self.period)
 
 
-class UserPeriodOutcount(models.Model):
+class UserPeriodOutcount(Model):
     user = models.ForeignKey(
         User, verbose_name='사용자', on_delete=models.CASCADE,
         related_name='user_period_outcount_set', related_query_name='user_period_outcount',
