@@ -1,12 +1,16 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import SimpleRouter
 
 from . import apis
+
+router = SimpleRouter()
+router.register('teams', apis.TeamViewSet)
+router.register('periods', apis.PeriodViewSet)
+router.register('users', apis.UserViewSet)
+router.register('profile', apis.ProfileViewSet)
 
 app_name = 'members'
 urlpatterns = [
     path('auth-token/', apis.AuthTokenAPIView.as_view()),
-    path('', apis.UserListAPIView.as_view()),
-    path('profile/', apis.ProfileAPIView.as_view()),
-    path('teams/', apis.TeamListAPIView.as_view()),
-    path('periods/', apis.PeriodListAPIView.as_view()),
+    path('', include(router.urls)),
 ]

@@ -153,6 +153,7 @@ Authorization: Token fs8943eu342cf79d8933jkd
 ``` 
 '''
 SWAGGER_SETTINGS = {
+    'DEFAULT_AUTO_SCHEMA_CLASS': 'utils.drf.doc.SwaggerAutoSchema',
     'SECURITY_DEFINITIONS': {
         'Basic': {
             'type': 'HTTP Basic Auth (RFC 7617)',
