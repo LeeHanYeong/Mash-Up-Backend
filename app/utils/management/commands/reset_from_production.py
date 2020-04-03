@@ -41,13 +41,17 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
+        # production, dev환경의 비밀 값 가져오기
         secrets_production = AWSSecretsManagerSecrets('config.settings.production')
         secrets_dev = AWSSecretsManagerSecrets('config.settings.dev')
+
+        # production, dev의 DB설정 가져오기
         db_production = secrets_production['DATABASES']['default']
         db_dev = secrets_dev['DATABASES']['default']
         db_local = {**db_dev, 'HOST': 'localhost'}
 
         try:
+            # production에서 DB dump해와서 dev에 load
             self._db_cmd(db_production, CASE_DUMP)
             self._db_cmd(db_dev, CASE_RESTORE)
             self._db_cmd(db_local, CASE_RESTORE)

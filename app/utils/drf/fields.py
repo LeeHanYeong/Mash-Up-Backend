@@ -1,3 +1,4 @@
+from phonenumber_field.serializerfields import PhoneNumberField as DefaultPhoneNumberField
 from rest_framework import serializers
 
 __all__ = (
@@ -38,3 +39,10 @@ class PkModelField(serializers.Field):
 
     def to_representation(self, value):
         return f'{self.model.__class__.__name__} instance (pk: {self.pk})'
+
+
+class PhoneNumberField(DefaultPhoneNumberField):
+    def to_representation(self, value):
+        if hasattr(value, 'as_national'):
+            return value.as_national
+        return value

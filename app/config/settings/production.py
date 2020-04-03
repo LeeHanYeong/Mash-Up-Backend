@@ -29,7 +29,8 @@ DBBACKUP_STORAGE_OPTIONS['bucket_name'] = SECRETS['AWS_STORAGE_BUCKET_NAME']
 # Sentry
 sentry_sdk.init(
     dsn=SECRETS['SENTRY_DSN'],
-    integrations=[DjangoIntegration()]
+    integrations=[DjangoIntegration()],
+    send_default_pii=True,
 )
 
 # WSGI

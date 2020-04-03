@@ -167,3 +167,12 @@ if SETTINGS_MODULE in ('config.settings', 'config.settings.local', 'config.setti
         urlpatterns = [path('__debug__/', include(debug_toolbar.urls))] + urlpatterns
     except ModuleNotFoundError:
         pass
+
+
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+
+urlpatterns += [
+    path('sentry-debug/', trigger_error),
+]

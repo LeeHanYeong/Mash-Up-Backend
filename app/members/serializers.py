@@ -1,6 +1,9 @@
+
 from rest_auth.serializers import TokenSerializer
 from rest_framework import serializers
 
+from utils.drf.fields import PhoneNumberField
+from utils.drf.serializers import ModelSerializer
 from .models import User, Team, Period, UserPeriodTeam
 
 
@@ -35,7 +38,7 @@ class UserPeriodTeamSerializer(serializers.ModelSerializer):
         )
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(ModelSerializer):
     user_period_team_set = UserPeriodTeamSerializer(many=True)
 
     class Meta:
