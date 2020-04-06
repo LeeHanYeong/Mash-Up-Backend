@@ -17,34 +17,22 @@ __all__ = (
 )
 
 
-@method_decorator(name='list', decorator=swagger_auto_schema(
-    operation_description='팀 목록 (ex: 백엔드, iOS....)',
-))
 class TeamViewSet(ListModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
 
-@method_decorator(name='list', decorator=swagger_auto_schema(
-    operation_description='기수 목록 (ex: 8기, 7기....)'
-))
 class PeriodViewSet(ListModelViewSet):
     queryset = Period.objects.all()
     serializer_class = PeriodSerializer
 
 
-@method_decorator(name='list', decorator=swagger_auto_schema(
-    operation_description='유저 목록'
-))
 class UserViewSet(ListModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filterset_class = UserFilterSet
 
 
-@method_decorator(name='retrieve', decorator=swagger_auto_schema(
-    operation_description='유저 프로필 (헤더에 토큰이 존재할 시, 토큰에 해당하는 유저정보 리턴)',
-))
 class ProfileViewSet(RetrieveModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer

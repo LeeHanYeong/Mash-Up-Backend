@@ -1,4 +1,8 @@
+from typing import Tuple, Sequence
+
+from django.utils.decorators import method_decorator
 from drf_yasg.inspectors import SwaggerAutoSchema as DefaultSwaggerAutoSchema
+from drf_yasg.utils import swagger_auto_schema
 from inflection import camelize
 
 
@@ -31,3 +35,11 @@ class SwaggerAutoSchema(DefaultSwaggerAutoSchema):
             operation_keys = [key.replace('-', '_') for key in operation_keys]
             operation_id = ' _'.join(operation_keys)
         return camelize(operation_id)
+
+
+def schema(view, methods: Sequence[Tuple[str, dict]]):
+    for method in methods:
+        view = method_decorator(
+            name=method[0], decorator=swagger_auto_schema(**method[1])
+        )(view)
+    return view
