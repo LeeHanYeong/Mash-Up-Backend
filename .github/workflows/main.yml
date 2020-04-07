@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+env:
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  AWS_SECRETS_MANAGER_ACCESS_KEY_ID: ${{ secrets.AWS_SECRETS_MANAGER_ACCESS_KEY_ID }}
+  AWS_SECRETS_MANAGER_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRETS_MANAGER_SECRET_ACCESS_KEY }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8]
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache Poetry
+      id: cache-poetry
+      uses: actions/cache@v1
+      with:
+        path: ~/.poetry
+        key: ${{ runner.os }}-cache-poetry
+        restore-keys: |
+          ${{ runner.os }}-cache-poetry
+    
+    - name: Cache pip
+      uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install Poetry
+      if: steps.cache-poetry.outputs.cache-hit != 'true'
+      run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+      
+    - name: Poetry export requirements.txt
+      run: ~/.poetry/bin/poetry export -f requirements.txt > requirements.txt
+    
+    - name: Install Python packages
+      run: pip install -r requirements.txt
+      
+    - name: pytest
+      run: pytest --cov app
+    
+    - name: codecov
+      run: codecov
+    
