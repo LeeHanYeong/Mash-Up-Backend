@@ -1,7 +1,4 @@
-from django.utils.decorators import method_decorator
-from drf_yasg.utils import swagger_auto_schema
 from rest_auth.views import LoginView
-from rest_framework import status
 
 from utils.drf.viewsets import ListModelViewSet, RetrieveModelViewSet
 from .filters import UserFilterSet
@@ -41,13 +38,6 @@ class ProfileViewSet(RetrieveModelViewSet):
         return self.request.user
 
 
-@method_decorator(name='post', decorator=swagger_auto_schema(
-    operation_id='Get AuthToken',
-    operation_description='인증정보를 사용해 사용자의 Token(key)과 User정보를 획득',
-    responses={
-        status.HTTP_200_OK: AuthTokenSerializer(),
-    },
-))
 class AuthTokenAPIView(LoginView):
     def get_response_serializer(self):
         return AuthTokenSerializer

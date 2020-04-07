@@ -1,8 +1,10 @@
 from django.urls import path, include
+from rest_framework import status
 from rest_framework.routers import SimpleRouter
 
 from utils.drf.doc import schema
 from . import apis
+from .serializers import AuthTokenSerializer
 
 app_name = 'members'
 
@@ -33,6 +35,15 @@ router.register('profile', schema(
     ]))
 
 urlpatterns = [
-    path('auth-token/', apis.AuthTokenAPIView.as_view()),
+    path('auth-token/', schema(
+        apis.AuthTokenAPIView, [
+            ('post', {
+                'operation_id': 'Get AuthToken',
+                'operation_description': '인증정보를 사용해 사용자의 Token(key)과 User정보를 획득',
+                'responses': {
+                    status.HTTP_200_OK: AuthTokenSerializer(),
+                }
+            }),
+        ]).as_view()),
     path('', include(router.urls)),
 ]
