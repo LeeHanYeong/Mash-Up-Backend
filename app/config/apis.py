@@ -8,6 +8,11 @@ from rest_framework.response import Response
 
 from utils.drf.exceptions import SendPushException
 
+__all__ = (
+    'PushTestSerializer',
+    'FCMTestAPIView',
+)
+
 
 class PushTestSerializer(serializers.Serializer):
     registration_id = serializers.CharField()
