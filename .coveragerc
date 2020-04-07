@@ -1,0 +1,26 @@
+[run]
+source =
+    app
+
+omit =
+    app/manage.py
+    app/config/asgi.py
+    app/config/wsgi.py
+    app/config/jinja2.py
+    app/config/storages.py
+    app/config/settings/*
+    app/config/wsgi/*
+
+    app/*/migrations/*
+    app/*/management/*
+    app/*/tests/*
+    app/*/tests*
+
+    app/static/*
+    app/templates/*
+    app/utils/*
+
+[report]
+exclude_lines =
+    def __str__
+    def __repr__
