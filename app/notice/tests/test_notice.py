@@ -13,28 +13,48 @@ from notice.models import Notice
 
 
 class NoticeAPITest(APITestCase):
-    URL_LC = '/api/notices/'
+    URL_LIST = '/api/notices/'
+
+    def _authenticate(self, user=None):
+        if user is None:
+            user = self.user
+        self.client.force_authenticate(user=user)
+
+    def setUp(self) -> None:
+        self.user = baker.make(User)
+
+    def test_notice_list_require_authenticate(self):
+        response = self.client.get(self.URL_LIST)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_notice_list(self):
+        self._authenticate()
         baker.make(Notice, type=Notice.TYPE_ALL, _quantity=100)
-        response = self.client.get(self.URL_LC)
+        response = self.client.get(self.URL_LIST)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 100)
         self.assertEqual(len(response.data['results']), 20)
 
     def test_notice_list_page(self):
+        self._authenticate()
         page_size = 20
         page = 3
         notice_list = baker.make(Notice, type=Notice.TYPE_ALL, _quantity=100)
         query_params = {
             'page': page,
         }
-        response = self.client.get(self.URL_LC, query_params)
+        response = self.client.get(self.URL_LIST, query_params)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 100)
         self.assertEqual(len(response.data['results']), page_size)
         self.assertListEqual(
             sorted([notice['id'] for notice in response.data['results']]),
-            sorted([notice.id for notice in notice_list[page_size * 3:page_size * 4]]),
+            sorted([notice.id for notice in notice_list[page_size * 2:page_size * 3]]),
         )
+
+    def test_notice_create_require_authenticate(self):
+        response = self.client.post(self.URL_LIST)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_notice_create(self):
         notice_title = get_random_string()
@@ -69,7 +89,7 @@ class NoticeAPITest(APITestCase):
 
         # 객체가 obj로 올 때와 id만 올 때 전부 테스트
         for data in (data_obj, data_list):
-            response = self.client.post(self.URL_LC, data=data, format='json')
+            response = self.client.post(self.URL_LIST, data=data, format='json')
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             self.assertEqual(data['type'], response.data['type'])
             self.assertEqual(data['title'], response.data['title'])

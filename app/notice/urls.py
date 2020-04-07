@@ -40,12 +40,12 @@ DOC_ATTENDANCE_UPDATE = '''
 '''
 
 urlpatterns = [
-    path('', include(router.urls)),
     # id가 optional
-    re_path(r'attendances/(?:(?P<id>\d+)/)?$', schema(
+    re_path(r'attendances/(?:(?P<pk>\d+)/)?$', schema(
         apis.AttendanceViewSet, (
             ('update', {
                 'operation_description': DOC_ATTENDANCE_UPDATE,
             }),
         )).as_view({'patch': 'partial_update'})),
+    path('', include(router.urls)),
 ]

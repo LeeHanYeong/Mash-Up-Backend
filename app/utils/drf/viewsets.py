@@ -34,10 +34,10 @@ class GetSerializerClassMixin:
         return super().get_serializer_class()
 
 
-class ViewSetMixin:
+class ViewSetMixin(GetSerializerClassMixin):
     @swagger_auto_schema(auto_schema=None)
     def update(self, request, *args, **kwargs):
-        super().partial_update(request, *args, **kwargs)
+        return super().update(request, *args, **kwargs)
 
 
 class ListModelViewSet(ViewSetMixin,
@@ -93,7 +93,6 @@ class ReadOnlyModelViewSet(ViewSetMixin,
 
 
 class ModelViewSet(ViewSetMixin,
-                   GetSerializerClassMixin,
                    mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin,

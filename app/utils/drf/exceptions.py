@@ -1,5 +1,7 @@
+from django.http import Http404
 from rest_framework import status
 from rest_framework.exceptions import APIException
+from rest_framework.generics import get_object_or_404 as drf_get_object_or_404
 from rest_framework.views import exception_handler
 
 
@@ -23,6 +25,13 @@ def rest_exception_handler(exc, context):
         # 없으면 Response의 ErrorDetail이 가지고 있는 'code'값
         response.data['code'] = getattr(exc, 'code', getattr(exc, 'default_code', None)) or response.data['detail'].code
     return response
+
+
+def get_object_or_exception(queryset, exception, *filter_args, **filter_kwargs):
+    try:
+        return drf_get_object_or_404(queryset, *filter_args, **filter_kwargs)
+    except Http404:
+        raise exception
 
 
 class SendPushException(APIException):

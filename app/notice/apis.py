@@ -1,8 +1,9 @@
 from django.http import Http404
 from rest_framework import permissions
-from rest_framework.generics import get_object_or_404
 
+from utils.drf.exceptions import get_object_or_exception
 from utils.drf.viewsets import ModelViewSet, UpdateModelViewSet
+from .exceptions import NoticeNotFound
 from .filters import NoticeFilter
 from .models import Notice, Attendance
 from .permissions import NoticeAuthorOnlyUpdateDestory, AttendanceUserOnlyUpdate
@@ -48,6 +49,6 @@ class AttendanceViewSet(UpdateModelViewSet):
             attendance = super().get_object()
         except (Attendance.DoesNotExist, AssertionError, Http404):
             notice_id = self.request.data.get('notice_id')
-            notice = get_object_or_404(Notice, id=notice_id)
+            notice = get_object_or_exception(Notice, NoticeNotFound, id=notice_id)
             attendance = notice.attendance_set.get(user=self.request.user)
         return attendance

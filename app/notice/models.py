@@ -46,6 +46,8 @@ class NoticeQuerySet(models.QuerySet):
 
 
 class NoticeManager(models.Manager):
+    ORDERING = F('start_at').desc(nulls_last=True), '-id'
+
     def get_queryset(self):
         return NoticeQuerySet(self.model, using=self._db).select_related(
             'author',
@@ -55,13 +57,13 @@ class NoticeManager(models.Manager):
             'attendance_set',
             'attendance_set__user',
             'attendance_set__user__user_period_team_set',
-        )
+        ).order_by(*self.ORDERING)
 
     def with_voted(self, user):
-        return self.get_queryset().with_voted(user)
+        return self.get_queryset().with_voted(user).order_by(*self.ORDERING)
 
     def with_count(self):
-        return self.get_queryset().with_count()
+        return self.get_queryset().with_count().order_by(*self.ORDERING)
 
 
 class Notice(Model):
@@ -87,7 +89,7 @@ class Notice(Model):
         settings.AUTH_USER_MODEL, verbose_name='작성자', on_delete=models.SET_NULL,
         related_name='notice_set', null=True,
     )
-    start_at = models.DateTimeField('일시', blank=True, null=True, db_index=True)
+    start_at = models.DateTimeField('일시', blank=True, null=True)
     duration = models.DurationField('예상 진행시간', blank=True, null=True)
     address1 = models.CharField('주소', max_length=200, help_text='도로명/지번 주소', blank=True)
     address2 = models.CharField('상세주소', max_length=100, help_text='건물명/층/호수/상세장소 등', blank=True)
@@ -103,7 +105,9 @@ class Notice(Model):
     class Meta:
         verbose_name = '공지'
         verbose_name_plural = f'{verbose_name} 목록'
-        ordering = (F('start_at').desc(nulls_last=True), '-id')
+        indexes = [
+            models.Index(fields=['start_at']),
+        ]
 
     def __str__(self):
         return self.title
