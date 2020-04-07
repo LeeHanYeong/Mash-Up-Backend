@@ -7,6 +7,7 @@ on:
     branches: [ master, develop ]
 
 env:
+  DJANGO_SETTINGS_MODULE: config.settings.ci
   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   AWS_SECRETS_MANAGER_ACCESS_KEY_ID: ${{ secrets.AWS_SECRETS_MANAGER_ACCESS_KEY_ID }}
   AWS_SECRETS_MANAGER_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRETS_MANAGER_SECRET_ACCESS_KEY }}
