@@ -6,11 +6,11 @@ from .models import User
 class UserFilterSet(filters.FilterSet):
     period = filters.NumberFilter(
         field_name='user_period_team__period', distinct=True,
-        help_text='기수(Period) pk',
+        help_text='기수(Period) id',
     )
     team = filters.NumberFilter(
         field_name='user_period_team__team', distinct=True,
-        help_text='팀(Team) pk'
+        help_text='팀(Team) id'
     )
 
     class Meta:

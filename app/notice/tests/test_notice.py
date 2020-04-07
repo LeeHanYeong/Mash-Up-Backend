@@ -32,8 +32,8 @@ class NoticeAPITest(APITestCase):
         self.assertEqual(response.data['count'], 100)
         self.assertEqual(len(response.data['results']), page_size)
         self.assertListEqual(
-            sorted([notice['pk'] for notice in response.data['results']]),
-            sorted([notice.pk for notice in notice_list[page_size * 3:page_size * 4]]),
+            sorted([notice['id'] for notice in response.data['results']]),
+            sorted([notice.id for notice in notice_list[page_size * 3:page_size * 4]]),
         )
 
     def test_notice_create(self):
@@ -51,23 +51,23 @@ class NoticeAPITest(APITestCase):
             'type': Notice.TYPE_ALL,
             'team': None,
             'title': notice_title,
-            'author': {'pk': author.pk},
+            'author': {'id': author.id},
             'start_at': start_at,
             'duration': duration,
             'address1': address1,
             'address2': address2,
             'description': description,
-            'user_pk_list': [
-                {'pk': user.pk} for user in user_list
+            'user_id_list': [
+                {'id': user.id} for user in user_list
             ]
         }
         data_list = deepcopy(data_obj)
-        data_list['author'] = data_list['author']['pk']
-        data_list['user_pk_list'] = [user['pk'] for user in data_list['user_pk_list']]
+        data_list['author'] = data_list['author']['id']
+        data_list['user_id_list'] = [user['id'] for user in data_list['user_id_list']]
 
         self.client.force_authenticate(user=author)
 
-        # 객체가 obj로 올 때와 pk만 올 때 전부 테스트
+        # 객체가 obj로 올 때와 id만 올 때 전부 테스트
         for data in (data_obj, data_list):
             response = self.client.post(self.URL_LC, data=data, format='json')
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)

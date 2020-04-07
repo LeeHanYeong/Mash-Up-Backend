@@ -35,7 +35,7 @@ class Period(Model):
     class Meta:
         verbose_name = '기수정보'
         verbose_name_plural = f'{verbose_name} 목록'
-        ordering = ('-number', '-pk', 'is_current',)
+        ordering = ('-number', '-id', 'is_current',)
 
     def __str__(self):
         return f'{self.number}기'
@@ -43,7 +43,7 @@ class Period(Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.is_current:
-            Period.objects.exclude(pk=self.pk).update(is_current=False)
+            Period.objects.exclude(id=self.id).update(is_current=False)
 
 
 class UserManager(BaseUserManager):
@@ -71,7 +71,7 @@ class User(AbstractUser):
     class Meta:
         verbose_name = '사용자'
         verbose_name_plural = f'{verbose_name} 목록'
-        ordering = ('name', '-pk',)
+        ordering = ('name', '-id',)
         indexes = [
             models.Index(fields=['username']),
             models.Index(fields=['name']),
@@ -121,7 +121,7 @@ class UserPeriodTeam(Model):
         ]
 
     def __str__(self):
-        return str(self.pk)
+        return str(self.id)
         # return f'{self.period.number}기 | {self.team.name} | {self.user.name}'
 
     def save(self, *args, **kwargs):

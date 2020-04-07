@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='notice',
-            options={'ordering': (django.db.models.expressions.OrderBy(django.db.models.expressions.F('start_at'), descending=True, nulls_last=True), '-pk'), 'verbose_name': '공지', 'verbose_name_plural': '공지 목록'},
+            options={'ordering': (django.db.models.expressions.OrderBy(django.db.models.expressions.F('start_at'), descending=True, nulls_last=True), '-id'), 'verbose_name': '공지', 'verbose_name_plural': '공지 목록'},
         ),
     ]

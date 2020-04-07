@@ -56,10 +56,10 @@ class UserChangeForm(DjangoUserChangeForm):
         if self.cleaned_data['is_staff']:
             if group not in self.cleaned_data['groups']:
                 self.cleaned_data['groups'] = Group.objects.filter(
-                    Q(pk__in=self.cleaned_data['groups'].values_list('pk', flat=True)) |
-                    Q(pk=group.pk),
+                    Q(id__in=self.cleaned_data['groups'].values_list('id', flat=True)) |
+                    Q(id=group.id),
                 )
         else:
             if group in self.cleaned_data['groups']:
-                self.cleaned_data['groups'] = self.cleaned_data['groups'].exclude(pk=group.pk)
+                self.cleaned_data['groups'] = self.cleaned_data['groups'].exclude(id=group.id)
         return super().save(*args, **kwargs)

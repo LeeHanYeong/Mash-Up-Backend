@@ -18,7 +18,7 @@ class _NoticeAttendanceSerializer(ModelSerializer):
     class Meta:
         model = Attendance
         fields = (
-            'pk',
+            'id',
             'user',
             'vote',
             'vote_display',
@@ -49,7 +49,7 @@ class NoticeSerializer(ModelSerializer):
     class Meta:
         model = Notice
         fields = (
-            'pk',
+            'id',
             'type',
             'type_display',
             'team',
@@ -69,9 +69,9 @@ class NoticeSerializer(ModelSerializer):
 
 
 class NoticeCreateUpdateSerializer(ModelSerializer):
-    user_pk_list = serializers.ListField(
+    user_id_list = serializers.ListField(
         child=serializers.IntegerField(), write_only=True,
-        help_text='이 공지사항에 참석여부 투표할 사용자 PK List'
+        help_text='이 공지사항에 참석여부 투표할 사용자 ID List'
     )
 
     class Meta:
@@ -86,55 +86,55 @@ class NoticeCreateUpdateSerializer(ModelSerializer):
             'address2',
             'description',
 
-            'user_pk_list',
+            'user_id_list',
         )
 
     def __init__(self, *args, **kwargs):
-        # user_pk_list내부의 값이 int가 아닌 dict(JSON object)로 온 경우, 이를 pk로 변환
+        # user_id_list내부의 값이 int가 아닌 dict(JSON object)로 온 경우, 이를 id로 변환
         if 'data' in kwargs:
-            data_user_pk_list = kwargs['data'].get('user_pk_list')
-            for index, data_user_pk in enumerate(data_user_pk_list):
-                if isinstance(data_user_pk, dict):
-                    kwargs['data']['user_pk_list'][index] = data_user_pk['pk']
+            data_user_id_list = kwargs['data'].get('user_id_list')
+            for index, data_user_id in enumerate(data_user_id_list):
+                if isinstance(data_user_id, dict):
+                    kwargs['data']['user_id_list'][index] = data_user_id['id']
 
             data_author = kwargs['data'].get('author')
             if isinstance(data_author, dict):
-                kwargs['data']['author'] = kwargs['data'].pop('author')['pk']
+                kwargs['data']['author'] = kwargs['data'].pop('author')['id']
         super().__init__(*args, **kwargs)
 
-    def validate_user_pk_list(self, pk_list):
-        if User.objects.filter(pk__in=pk_list).count() != len(pk_list):
-            invalid_user_pk_list = []
-            for pk in pk_list:
-                if not User.objects.filter(pk=pk).exists():
-                    invalid_user_pk_list.append(pk)
+    def validate_user_id_list(self, id_list):
+        if User.objects.filter(id__in=id_list).count() != len(id_list):
+            invalid_user_id_list = []
+            for id in id_list:
+                if not User.objects.filter(id=id).exists():
+                    invalid_user_id_list.append(id)
 
-            raise ValidationError('유효하지 않은 UserPK가 존재합니다 ({pk_list})'.format(
-                pk_list=', '.join(invalid_user_pk_list),
+            raise ValidationError('유효하지 않은 UserID가 존재합니다 ({id_list})'.format(
+                id_list=', '.join(invalid_user_id_list),
             ))
-        return pk_list
+        return id_list
 
     def create(self, validated_data):
         with transaction.atomic():
-            user_pk_list = validated_data.pop('user_pk_list', [])
+            user_id_list = validated_data.pop('user_id_list', [])
             notice = super().create(validated_data)
-            users = User.objects.filter(pk__in=user_pk_list)
+            users = User.objects.filter(id__in=user_id_list)
             Attendance.objects.bulk_create(
                 [Attendance(notice=notice, user=user) for user in users])
             return notice
 
     def update(self, instance, validated_data):
         with transaction.atomic():
-            user_pk_list = validated_data.pop('user_pk_list', [])
+            user_id_list = validated_data.pop('user_id_list', [])
             notice = super().update(instance, validated_data)
 
             # 포함되지 않은 User들에 해당하는 Attendance들을 삭제
-            notice.attendance_set.exclude(user__in=user_pk_list).delete()
+            notice.attendance_set.exclude(user__in=user_id_list).delete()
 
-            # 새로 만들어야 할 Attendance User pk list
-            exists_user_pk_list = notice.attendance_set.values_list('user', flat=True)
-            create_user_pk_list = [pk for pk in user_pk_list if pk not in exists_user_pk_list]
-            create_users = User.objects.filter(pk__in=create_user_pk_list)
+            # 새로 만들어야 할 Attendance User id list
+            exists_user_id_list = notice.attendance_set.values_list('user', flat=True)
+            create_user_id_list = [id for id in user_id_list if id not in exists_user_id_list]
+            create_users = User.objects.filter(id__in=create_user_id_list)
 
             # 새 Attendance create
             Attendance.objects.bulk_create(
@@ -145,5 +145,5 @@ class NoticeCreateUpdateSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         # attendance_voted_count항목의 annotate처리
-        instance = Notice.objects.with_count().get(pk=instance.pk)
+        instance = Notice.objects.with_count().get(id=instance.id)
         return NoticeSerializer(instance).data

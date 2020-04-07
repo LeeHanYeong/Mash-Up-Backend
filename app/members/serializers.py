@@ -8,7 +8,7 @@ class TeamSerializer(ModelSerializer):
     class Meta:
         model = Team
         fields = (
-            'pk',
+            'id',
             'name',
         )
 
@@ -17,7 +17,7 @@ class PeriodSerializer(ModelSerializer):
     class Meta:
         model = Period
         fields = (
-            'pk',
+            'id',
             'is_current',
             'number',
         )
@@ -41,7 +41,7 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'pk',
+            'id',
             'name',
             'phone_number',
             'email',

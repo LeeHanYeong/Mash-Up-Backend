@@ -1,10 +1,10 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import mixins
 from rest_framework.viewsets import (
     GenericViewSet as DefaultGenericViewSet,
 )
 
 __all__ = (
-    'GenericViewSet',
     'ListModelViewSet',
     'CreateModelViewSet',
     'RetrieveModelViewSet',
@@ -17,58 +17,87 @@ __all__ = (
 )
 
 
-class GenericViewSet(DefaultGenericViewSet):
+class GetSerializerClassMixin:
+    def get_serializer_class(self):
+        try:
+            action = getattr(self, 'action')
+            method = getattr(getattr(self, 'request'), 'method')
+
+            if action:
+                if action == 'partial_update':
+                    action = 'update'
+                return self.serializer_classes[action]
+            if method:
+                return self.serializer_classes[self.request.method]
+        except (KeyError, AttributeError):
+            pass
+        return super().get_serializer_class()
+
+
+class ViewSetMixin:
+    @swagger_auto_schema(auto_schema=None)
+    def update(self, request, *args, **kwargs):
+        super().partial_update(request, *args, **kwargs)
+
+
+class ListModelViewSet(ViewSetMixin,
+                       mixins.ListModelMixin,
+                       DefaultGenericViewSet):
     pass
 
 
-class ListModelViewSet(mixins.ListModelMixin,
-                       GenericViewSet):
+class CreateModelViewSet(ViewSetMixin,
+                         mixins.CreateModelMixin,
+                         DefaultGenericViewSet):
     pass
 
 
-class CreateModelViewSet(mixins.CreateModelMixin,
-                         GenericViewSet):
+class RetrieveModelViewSet(ViewSetMixin,
+                           mixins.RetrieveModelMixin,
+                           DefaultGenericViewSet):
     pass
 
 
-class RetrieveModelViewSet(mixins.RetrieveModelMixin,
-                           GenericViewSet):
+class UpdateModelViewSet(ViewSetMixin,
+                         mixins.UpdateModelMixin,
+                         DefaultGenericViewSet):
     pass
 
 
-class UpdateModelViewSet(mixins.UpdateModelMixin,
-                         GenericViewSet):
+class DestroyModelViewSet(ViewSetMixin,
+                          mixins.DestroyModelMixin,
+                          DefaultGenericViewSet):
     pass
 
 
-class DestroyModelViewSet(mixins.DestroyModelMixin,
-                          GenericViewSet):
-    pass
-
-
-class RetrieveUpdateModelViewSet(mixins.RetrieveModelMixin,
+class RetrieveUpdateModelViewSet(ViewSetMixin,
+                                 mixins.RetrieveModelMixin,
                                  mixins.UpdateModelMixin,
-                                 GenericViewSet):
+                                 DefaultGenericViewSet):
     pass
 
 
-class RetrieveUpdateDestroyModelViewSet(mixins.RetrieveModelMixin,
+class RetrieveUpdateDestroyModelViewSet(ViewSetMixin,
+                                        mixins.RetrieveModelMixin,
                                         mixins.UpdateModelMixin,
                                         mixins.DestroyModelMixin,
-                                        GenericViewSet):
+                                        DefaultGenericViewSet):
     pass
 
 
-class ReadOnlyModelViewSet(mixins.RetrieveModelMixin,
+class ReadOnlyModelViewSet(ViewSetMixin,
+                           mixins.RetrieveModelMixin,
                            mixins.ListModelMixin,
-                           GenericViewSet):
+                           DefaultGenericViewSet):
     pass
 
 
-class ModelViewSet(mixins.CreateModelMixin,
+class ModelViewSet(ViewSetMixin,
+                   GetSerializerClassMixin,
+                   mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin,
                    mixins.DestroyModelMixin,
                    mixins.ListModelMixin,
-                   GenericViewSet):
+                   DefaultGenericViewSet):
     pass

@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='user',
-            options={'ordering': ('-pk', 'name'), 'verbose_name': '사용자', 'verbose_name_plural': '사용자 목록'},
+            options={'ordering': ('-id', 'name'), 'verbose_name': '사용자', 'verbose_name_plural': '사용자 목록'},
         ),
         migrations.AddIndex(
             model_name='user',

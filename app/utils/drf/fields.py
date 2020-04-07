@@ -11,10 +11,10 @@ __all__ = (
 
 
 class PkModelFieldDoesNotExist(Exception):
-    def __init__(self, model, pk):
+    def __init__(self, model, id):
         self.model = model
-        self.msg = '"{model_class}"에서 pk={pk}인 인스턴스를 찾을 수 없습니다'.format(
-            model_class=model.__class__.__name__, pk=pk)
+        self.msg = '"{model_class}"에서 id={id}인 인스턴스를 찾을 수 없습니다'.format(
+            model_class=model.__class__.__name__, id=id)
 
     def __str__(self):
         return self.msg
@@ -30,8 +30,8 @@ class PkModelField(serializers.Field):
     특정 Model의 instance를 나타내는 Field
     주어지는 데이터가
         dict
-            {'pk': 1} 또는 {'id': 1}
-        literal (pk가 될 수 있는 숫자/문자 등의 고정 값)
+            {'id': 1} 또는 {'id': 1}
+        literal (id가 될 수 있는 숫자/문자 등의 고정 값)
             1, '1'
     과 같은 여러 형태일 때 전부 처리해주도록 한다
 

@@ -24,7 +24,7 @@ class AttendanceModelTest(TestCase):
         qs = Notice.objects.with_count().with_voted(user=user)
         self.assertEqual(qs.filter(is_voted=True).count(), 1)
         self.assertEqual(qs.filter(is_voted=False).count(), 9)
-        self.assertEqual(qs.get(is_voted=True).pk, attendance.notice.pk)
+        self.assertEqual(qs.get(is_voted=True).id, attendance.notice.id)
 
 
 class AttendanceAPITest(APITestCase):
@@ -41,7 +41,7 @@ class AttendanceAPITest(APITestCase):
 
         self.client.force_authenticate(user=user)
         response = self.client.patch(
-            path=f'/api/notices/attendances/{attendance.pk}/',
+            path=f'/api/notices/attendances/{attendance.id}/',
             data={
                 'vote': Attendance.VOTE_ATTEND,
             }
@@ -52,7 +52,7 @@ class AttendanceAPITest(APITestCase):
         response = self.client.patch(
             path=f'/api/notices/attendances/',
             data={
-                'notice_pk': attendance.notice.pk,
+                'notice_id': attendance.notice.id,
                 'vote': Attendance.VOTE_LATE,
             }
         )

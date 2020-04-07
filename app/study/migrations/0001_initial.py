@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': '스터디',
                 'verbose_name_plural': '스터디 목록',
-                'ordering': ('-pk',),
+                'ordering': ('-id',),
             },
         ),
         migrations.CreateModel(

@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='period',
-            options={'ordering': ('-number', '-pk', 'is_current'), 'verbose_name': '기수정보', 'verbose_name_plural': '기수정보 목록'},
+            options={'ordering': ('-number', '-id', 'is_current'), 'verbose_name': '기수정보', 'verbose_name_plural': '기수정보 목록'},
         ),
         migrations.AlterField(
             model_name='user',

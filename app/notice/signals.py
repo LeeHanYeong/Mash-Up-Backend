@@ -13,7 +13,7 @@ logger = logging.getLogger('signal')
 @receiver(post_save, sender=Notice)
 def notice_created(sender, instance, created, **kwargs):
     from .serializers import NoticeSerializer
-    logger.info(f'notice_created (pk: {instance.pk})')
+    logger.info(f'notice_created (id: {instance.id})')
     gcm_devices = GCMDevice.objects.filter(user__user_notice_set=instance)
     message = f'"{instance.title}" 공지가 등록되었습니다'
     extra = {

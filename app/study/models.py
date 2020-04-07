@@ -32,7 +32,7 @@ class Study(TimeStampedModel):
     class Meta:
         verbose_name = '스터디'
         verbose_name_plural = f'{verbose_name} 목록'
-        ordering = ('-pk',)
+        ordering = ('-id',)
 
     def __str__(self):
         return self.name
@@ -80,7 +80,7 @@ class StudyMeeting(TimeStampedModel):
 
     @property
     def number(self):
-        return self.study.meeting_set.filter(pk__lte=self.pk).count()
+        return self.study.meeting_set.filter(id__lte=self.id).count()
 
 
 class StudyMeetingUserActivity(Model):

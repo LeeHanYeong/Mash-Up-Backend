@@ -22,7 +22,7 @@ class NoticeQuerySet(models.QuerySet):
     def with_voted(self, user):
         if user.is_authenticated:
             is_voted = Attendance.objects.filter(
-                notice=OuterRef('pk'),
+                notice=OuterRef('id'),
                 user=user,
             ).exclude(vote=Attendance.VOTE_UNSELECTED)
             return self.annotate(is_voted=Exists(is_voted))
@@ -98,7 +98,7 @@ class Notice(Model):
     class Meta:
         verbose_name = '공지'
         verbose_name_plural = f'{verbose_name} 목록'
-        ordering = (F('start_at').desc(nulls_last=True), '-pk')
+        ordering = (F('start_at').desc(nulls_last=True), '-id')
 
     def __str__(self):
         return self.title
