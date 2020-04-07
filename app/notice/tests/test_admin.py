@@ -19,7 +19,7 @@ class AdminTest(TestCase):
     def test_200(self):
         for app, model, kwargs in (
                 ('notice', Notice, {'type': Notice.TYPE_ALL}),
-                ('notice', Attendance, {}),
+                ('notice', Attendance, {'notice': baker.make(Notice, type=Notice.TYPE_ALL)}),
         ):
             instance = baker.make(model, **kwargs)
             urls = get_admin_urls(f'admin:{app}_{model.__name__.lower()}', instance)

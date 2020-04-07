@@ -118,6 +118,7 @@ class Notice(Model):
                 raise ValidationError('팀별 공지인 경우, 해당 팀을 선택해야 합니다')
 
     def save(self, **kwargs):
+        print(self.type)
         self.clean()
         super().save()
 
