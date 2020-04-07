@@ -1,7 +1,15 @@
 from rest_auth.serializers import TokenSerializer
 
-from utils.drf.serializers import ModelSerializer
+from utils.drf.serializers import ModelSerializer, ModelSerializerMixin
 from .models import User, Team, Period, UserPeriodTeam
+
+__all__ = (
+    'TeamSerializer',
+    'PeriodSerializer',
+    'UserPeriodTeamSerializer',
+    'UserSerializer',
+    'AuthTokenSerializer',
+)
 
 
 class TeamSerializer(ModelSerializer):
@@ -51,7 +59,7 @@ class UserSerializer(ModelSerializer):
         )
 
 
-class AuthTokenSerializer(TokenSerializer):
+class AuthTokenSerializer(ModelSerializerMixin, TokenSerializer):
     user = UserSerializer()
 
     class Meta(TokenSerializer.Meta):

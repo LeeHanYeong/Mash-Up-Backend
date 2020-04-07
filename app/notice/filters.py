@@ -2,6 +2,10 @@ from django_filters import rest_framework as filters
 
 from .models import Notice
 
+__all__ = (
+    'NoticeFilter',
+)
+
 
 class NoticeFilter(filters.FilterSet):
     type = filters.CharFilter(

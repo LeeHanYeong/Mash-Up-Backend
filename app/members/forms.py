@@ -6,6 +6,11 @@ from django.db.models import Q
 
 User = get_user_model()
 
+__all__ = (
+    'UserCreationForm',
+    'UserChangeForm',
+)
+
 
 class UserCreationForm(forms.ModelForm):
     class Meta:

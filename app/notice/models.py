@@ -17,6 +17,11 @@ from utils.django.models import Model
 logger = logging.getLogger(__name__)
 User = get_user_model()
 
+__all__ = (
+    'Notice',
+    'Attendance',
+)
+
 
 class NoticeQuerySet(models.QuerySet):
     def with_voted(self, user):

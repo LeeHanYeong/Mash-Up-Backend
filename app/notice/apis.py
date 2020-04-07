@@ -8,6 +8,11 @@ from .models import Notice, Attendance
 from .permissions import NoticeAuthorOnlyUpdateDestory, AttendanceUserOnlyUpdate
 from .serializers import NoticeSerializer, NoticeCreateUpdateSerializer, AttendanceUpdateSerializer
 
+__all__ = (
+    'NoticeViewSet',
+    'AttendanceViewSet',
+)
+
 
 class NoticeViewSet(ModelViewSet):
     queryset = Notice.objects.with_count()
