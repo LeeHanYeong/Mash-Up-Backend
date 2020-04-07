@@ -6,22 +6,6 @@ from drf_yasg.utils import swagger_auto_schema
 from inflection import camelize
 
 
-class ResponseErrors(object):
-    def __new__(cls, title, *errors):
-        return cls.to_dict(title, *errors)
-
-    @staticmethod
-    def to_dict(title, *errors):
-        return {
-            title: {
-                error.case: {
-                    'code': error.code,
-                    'message': error.message,
-                } for error in errors
-            }
-        }
-
-
 class SwaggerAutoSchema(DefaultSwaggerAutoSchema):
     def get_operation_id(self, operation_keys=None):
         operation_keys = operation_keys or self.operation_keys

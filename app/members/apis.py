@@ -1,4 +1,5 @@
 from rest_auth.views import LoginView
+from rest_framework import permissions
 
 from utils.drf.viewsets import ListModelViewSet, RetrieveModelViewSet
 from .filters import UserFilterSet
@@ -33,6 +34,9 @@ class UserViewSet(ListModelViewSet):
 class ProfileViewSet(RetrieveModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (
+        permissions.IsAuthenticated,
+    )
 
     def get_object(self):
         return self.request.user

@@ -8,10 +8,5 @@ class NoticeConfig(AppConfig):
     verbose_name = '공지'
 
     def ready(self):
-        SETTINGS_MODULE = os.environ.get('DJANGO_SETTINGS_MODULE')
-        if SETTINGS_MODULE not in (
-                'config.settings',
-                'config.settings.local',
-                'config.settings.dev',
-                'config.settings.ci'):
+        if os.environ.get('DJANGO_SETTINGS_MODULE') == 'config.settings.production':
             import notice.signals  # noqa F401

@@ -18,7 +18,6 @@ omit =
 
     app/static/*
     app/templates/*
-    app/utils/*
 
 [report]
 exclude_lines =
