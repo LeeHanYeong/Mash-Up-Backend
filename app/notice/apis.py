@@ -5,7 +5,7 @@ from rest_framework.generics import get_object_or_404
 from utils.drf.viewsets import ModelViewSet, UpdateModelViewSet
 from .filters import NoticeFilter
 from .models import Notice, Attendance
-from .permissions import NoticeAuthorOnlyUpdate, AttendanceUserOrReadOnly
+from .permissions import NoticeAuthorOnlyUpdateDestory, AttendanceUserOnlyUpdate
 from .serializers import NoticeSerializer, NoticeCreateUpdateSerializer, AttendanceUpdateSerializer
 
 
@@ -14,7 +14,7 @@ class NoticeViewSet(ModelViewSet):
     filterset_class = NoticeFilter
     permission_classes = (
         permissions.IsAuthenticated,
-        NoticeAuthorOnlyUpdate,
+        NoticeAuthorOnlyUpdateDestory,
     )
     serializer_classes = {
         'list': NoticeSerializer,
@@ -35,7 +35,7 @@ class AttendanceViewSet(UpdateModelViewSet):
     serializer_class = AttendanceUpdateSerializer
     permission_classes = (
         permissions.IsAuthenticated,
-        AttendanceUserOrReadOnly,
+        AttendanceUserOnlyUpdate,
     )
 
     def get_object(self):

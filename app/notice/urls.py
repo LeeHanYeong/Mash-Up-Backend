@@ -41,6 +41,7 @@ DOC_ATTENDANCE_UPDATE = '''
 
 urlpatterns = [
     path('', include(router.urls)),
+    # id가 optional
     re_path(r'attendances/(?:(?P<id>\d+)/)?$', schema(
         apis.AttendanceViewSet, (
             ('update', {
