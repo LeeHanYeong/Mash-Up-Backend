@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework import status
 from rest_framework.routers import SimpleRouter
 
@@ -27,14 +27,14 @@ router.register('users', schema(
             'operation_description': '사용자 목록',
         }),
     ]))
-router.register('profile', schema(
-    apis.ProfileViewSet, [
-        ('retrieve', {
-            'operation_description': '유저 프로필 (헤더에 토큰이 존재할 시, 토큰에 해당하는 유저정보 리턴)',
-        }),
-    ]))
 
 urlpatterns = [
+    path('profile/', schema(
+        apis.ProfileViewSet, (
+            ('retrieve', {
+                'operation_description': '유저 프로필 (헤더에 토큰이 존재할 시, 토큰에 해당하는 유저정보 리턴)',
+            }),
+        )).as_view({'get': 'retrieve'})),
     path('auth-token/', schema(
         apis.AuthTokenAPIView, [
             ('post', {
