@@ -9,4 +9,5 @@ class NoticeConfig(AppConfig):
 
     def ready(self):
         if os.environ.get('DJANGO_SETTINGS_MODULE') == 'config.settings.production':
-            import notice.signals  # noqa F401
+            pass
+            # import notice.signals  # noqa F401
