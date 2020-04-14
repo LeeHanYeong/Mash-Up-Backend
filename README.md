@@ -15,9 +15,23 @@
 
 ## Installation
 
+**Python packages**
+
 ```
 poetry install
 ```
+
+
+
+**Secrets**
+
+> `.env` file
+
+```
+export DJANGO_SETTINGS_MODULE=config.settings.dev
+```
+
+
 
 
 
