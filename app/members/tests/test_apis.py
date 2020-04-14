@@ -8,17 +8,17 @@ from members.serializers import AuthTokenSerializer
 
 
 class ProfileAPITest(APITestCase):
-    URL_DETAIL = '/api/members/profile/{pk}/'
+    URL = '/api/members/profile/'
 
     def test_require_authenticate(self):
-        user = baker.make(User)
-        url = self.URL_DETAIL.format(pk=user.pk)
+        baker.make(User)
+        url = self.URL
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_api(self):
         user = baker.make(User)
-        url = self.URL_DETAIL.format(pk=user.pk)
+        url = self.URL
 
         self.client.force_authenticate(user=user)
         response = self.client.get(url)
