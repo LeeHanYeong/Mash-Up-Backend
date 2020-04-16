@@ -44,6 +44,13 @@ class NoticeQuerySet(models.QuerySet):
             attendance_count=Count('attendance_set'),
         )
 
+    def with_attendance_set(self):
+        return self.prefetch_related(
+            'attendance_set',
+            'attendance_set__user',
+            'attendance_set__user__user_period_team_set',
+        )
+
 
 class NoticeManager(models.Manager):
     ORDERING = F('start_at').desc(nulls_last=True), '-id'
@@ -54,9 +61,6 @@ class NoticeManager(models.Manager):
             'team',
         ).prefetch_related(
             'author__user_period_team_set',
-            'attendance_set',
-            'attendance_set__user',
-            'attendance_set__user__user_period_team_set',
         ).order_by(*self.ORDERING)
 
     def with_voted(self, user):
@@ -64,6 +68,9 @@ class NoticeManager(models.Manager):
 
     def with_count(self):
         return self.get_queryset().with_count().order_by(*self.ORDERING)
+
+    def with_attendance_set(self):
+        return self.get_queryset().with_attendance_set()().order_by(*self.ORDERING)
 
 
 class Notice(Model):

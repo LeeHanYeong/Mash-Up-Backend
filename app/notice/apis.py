@@ -6,8 +6,13 @@ from utils.drf.viewsets import ModelViewSet, UpdateModelViewSet
 from .exceptions import NoticeNotFound
 from .filters import NoticeFilter
 from .models import Notice, Attendance
-from .permissions import NoticeAuthorOnlyUpdateDestory, AttendanceUserOnlyUpdate
-from .serializers import NoticeSerializer, NoticeCreateUpdateSerializer, AttendanceUpdateSerializer
+from .permissions import NoticeAuthorOnlyUpdateDestroy, AttendanceUserOnlyUpdate
+from .serializers import (
+    NoticeSerializer,
+    NoticeCreateUpdateSerializer,
+    NoticeDetailSerializer,
+    AttendanceUpdateSerializer,
+)
 
 __all__ = (
     'NoticeViewSet',
@@ -20,17 +25,20 @@ class NoticeViewSet(ModelViewSet):
     filterset_class = NoticeFilter
     permission_classes = (
         permissions.IsAuthenticated,
-        NoticeAuthorOnlyUpdateDestory,
+        NoticeAuthorOnlyUpdateDestroy,
     )
     serializer_classes = {
         'list': NoticeSerializer,
-        'retrieve': NoticeSerializer,
+        'retrieve': NoticeDetailSerializer,
         'create': NoticeCreateUpdateSerializer,
         'update': NoticeCreateUpdateSerializer,
     }
 
     def get_queryset(self):
-        return self.queryset.with_voted(user=self.request.user)
+        qs = self.queryset.with_voted(user=self.request.user)
+        if self.action == 'retrieve':
+            qs = qs.with_attendance_set()
+        return qs
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

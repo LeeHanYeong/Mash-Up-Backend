@@ -10,6 +10,12 @@ from ..models import Notice, Attendance
 
 User = get_user_model()
 
+__all__ = (
+    'NoticeSerializer',
+    'NoticeDetailSerializer',
+    'NoticeCreateUpdateSerializer',
+)
+
 
 class _NoticeAttendanceSerializer(ModelSerializer):
     user = UserSerializer()
@@ -26,25 +32,13 @@ class _NoticeAttendanceSerializer(ModelSerializer):
 
 
 class NoticeSerializer(ModelSerializer):
-    OPTIONAL_FIELDS = (
-        'attendance_voted_count',
-        'attendance_count',
-        'is_voted',
-    )
     type_display = serializers.CharField(source='get_type_display')
     team = TeamSerializer()
     author = UserSerializer()
 
-    attendance_set = _NoticeAttendanceSerializer(many=True, help_text='투표현황 목록')
-    attendance_voted_count = serializers.IntegerField(help_text='투표에 참여한 인원 수')
-    attendance_count = serializers.IntegerField(help_text='투표 가능한 총 인원 수')
-    is_voted = serializers.NullBooleanField(help_text='사용자의 투표여부', default=None)
-
-    def __init__(self, instance=None, data=empty, **kwargs):
-        for optional_field in self.OPTIONAL_FIELDS:
-            if not hasattr(instance, optional_field):
-                self.fields.pop(optional_field)
-        super().__init__(instance, data, **kwargs)
+    attendance_voted_count = serializers.SerializerMethodField(help_text='투표에 참여한 인원 수')
+    attendance_count = serializers.SerializerMethodField(help_text='투표 가능한 총 인원 수')
+    is_voted = serializers.SerializerMethodField(help_text='투표에 참여한 인원 수')
 
     class Meta:
         model = Notice
@@ -61,10 +55,28 @@ class NoticeSerializer(ModelSerializer):
             'address2',
             'description',
 
-            'attendance_set',
             'attendance_voted_count',
             'attendance_count',
             'is_voted',
+        )
+
+    def get_attendance_voted_count(self, obj):
+        return getattr(obj, 'attendance_voted_count', None)
+
+    def get_attendance_count(self, obj):
+        return getattr(obj, 'attendance_count', None)
+
+    def get_is_voted(self, obj):
+        return getattr(obj, 'is_voted', None)
+
+
+class NoticeDetailSerializer(NoticeSerializer):
+    attendance_set = _NoticeAttendanceSerializer(many=True, help_text='투표현황 목록')
+
+    class Meta(NoticeSerializer.Meta):
+        model = Notice
+        fields = NoticeSerializer.Meta.fields + (
+            'attendance_set',
         )
 
 
@@ -146,4 +158,4 @@ class NoticeCreateUpdateSerializer(ModelSerializer):
     def to_representation(self, instance):
         # attendance_voted_count항목의 annotate처리
         instance = Notice.objects.with_count().get(id=instance.id)
-        return NoticeSerializer(instance).data
+        return NoticeDetailSerializer(instance).data
