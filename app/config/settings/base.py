@@ -271,6 +271,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# DB
+ATOMIC_REQUESTS = True
+
 # Internationalization
 LANGUAGE_CODE = 'ko-kr'
 TIME_ZONE = 'Asia/Seoul'

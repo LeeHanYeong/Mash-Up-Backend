@@ -1,3 +1,4 @@
+from drf_writable_nested import WritableNestedModelSerializer as DefaultWritableNestedModelSerializer
 from phonenumber_field.modelfields import PhoneNumberField as PhoneNumberModelField
 from rest_framework.fields import empty
 from rest_framework.serializers import ModelSerializer as DefaultModelSerializer
@@ -21,4 +22,8 @@ class ModelSerializerMixin:
 
 
 class ModelSerializer(ModelSerializerMixin, DefaultModelSerializer):
+    pass
+
+
+class WritableNestedModelSerializer(ModelSerializerMixin, DefaultWritableNestedModelSerializer):
     pass

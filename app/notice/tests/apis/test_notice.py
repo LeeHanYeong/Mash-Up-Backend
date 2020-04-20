@@ -77,13 +77,13 @@ class NoticeAPITest(APITestCase):
             'address1': address1,
             'address2': address2,
             'description': description,
-            'user_id_list': [
+            'user_set': [
                 {'id': user.id} for user in user_list
             ]
         }
         data_list = deepcopy(data_obj)
         data_list['author'] = data_list['author']['id']
-        data_list['user_id_list'] = [user['id'] for user in data_list['user_id_list']]
+        data_list['user_set'] = [user['id'] for user in data_list['user_set']]
 
         self.client.force_authenticate(user=author)
 
@@ -105,3 +105,4 @@ class NoticeAPITest(APITestCase):
             self.assertEqual(data['address1'], response.data['address1'])
             self.assertEqual(data['address2'], response.data['address2'])
             self.assertEqual(data['description'], response.data['description'])
+            self.assertEqual(len(response.data['attendance_set']), 20)

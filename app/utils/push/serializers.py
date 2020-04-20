@@ -10,7 +10,7 @@ __all__ = (
 
 class NoticePushSerializer(ModelSerializer):
     author = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    is_voted = serializers.SerializerMethodField(help_text='투표에 참여한 인원 수')
+    is_voted = serializers.IntegerField(help_text='투표에 참여한 인원 수', default=None)
 
     class Meta:
         model = Notice
@@ -24,6 +24,3 @@ class NoticePushSerializer(ModelSerializer):
 
             'is_voted',
         )
-
-    def get_is_voted(self, obj):
-        return getattr(obj, 'is_voted', None)
