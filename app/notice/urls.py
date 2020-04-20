@@ -3,6 +3,7 @@ from rest_framework.routers import SimpleRouter
 
 from utils.drf.doc import schema
 from . import apis
+from .serializers import NoticeDetailSerializer
 
 app_name = 'notices'
 
@@ -14,12 +15,18 @@ router.register(r'', schema(
         }),
         ('create', {
             'operation_description': '공지사항 생성',
+            'responses': {
+                201: NoticeDetailSerializer(),
+            },
         }),
         ('retrieve', {
             'operation_description': '공지사항 상세',
         }),
         ('update', {
             'operation_description': '공지사항 수정',
+            'responses': {
+                200: NoticeDetailSerializer(),
+            },
         }),
         ('destroy', {
             'operation_description': '공지사항 삭제',

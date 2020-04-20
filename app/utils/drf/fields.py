@@ -1,6 +1,10 @@
+from collections import OrderedDict
 from typing import Type
 
 from django.db import models
+from django.utils.safestring import mark_safe
+from drf_yasg import openapi
+from drf_yasg.inspectors.field import get_basic_type_info
 from phonenumber_field.serializerfields import PhoneNumberField as DefaultPhoneNumberField
 from rest_framework import serializers
 
@@ -22,7 +26,7 @@ class PkModelFieldDoesNotExist(Exception):
 
 class PkModelFieldIsNotForRead(Exception):
     def __str__(self):
-        return 'PkModelField는 생성시에만 사용할 수 있습니다'
+        return '"serializer"가 지정되지 않은 PkModelField는 생성시에만 사용할 수 있습니다'
 
 
 class PkModelField(serializers.Field):
@@ -38,15 +42,20 @@ class PkModelField(serializers.Field):
     * 생성시에만 사용한다
     """
 
-    def __init__(self, model: Type[models.Model], *args, **kwargs):
+    def __init__(self, model: Type[models.Model],
+                 serializer: Type[serializers.Serializer] = None,
+                 *args, **kwargs):
         """
         :param model: Model class
+        :param serializer: Serializer class to use in "to_representation"
         :param kwargs:
         """
         if not issubclass(model, models.Model):
             raise ValueError('PkModelField의 "model"인수에는 Django Model의 자식클래스가 전달되어야합니다')
 
         self.model = model
+        self.pk_attname = model._meta.pk.attname
+        self.serializer = serializer
         super().__init__(*args, **kwargs)
 
     def to_internal_value(self, data):
@@ -54,7 +63,7 @@ class PkModelField(serializers.Field):
             if hasattr(data, 'get'):
                 pk = data.get('id') or \
                      data.get('pk') or \
-                     data.get(self.model._meta.pk.attname, data)
+                     data.get(self.pk_attname, data)
             else:
                 pk = data
 
@@ -65,7 +74,36 @@ class PkModelField(serializers.Field):
         return data
 
     def to_representation(self, value):
+        if self.serializer:
+            return self.serializer(value).data
         raise PkModelFieldIsNotForRead()
+
+    @property
+    def Meta(self):
+        pk_field = self.model._meta.pk
+        type_info = get_basic_type_info(pk_field)
+        model_name = getattr(self.model._meta, 'verbose_name', self.model.__name__)
+        properties = OrderedDict({
+            self.pk_attname: openapi.Schema(
+                type=type_info['type'],
+            ),
+            '<Other fields>': openapi.Schema(
+                type=openapi.TYPE_STRING,
+                description=mark_safe(
+                    f'Other fields of the `{model_name}` object<br>'
+                    f'(fields other than `{self.pk_attname}` do not affect API requests)'
+                ),
+            )
+        })
+
+        class _Meta:
+            swagger_schema_fields = {
+                'type': openapi.TYPE_OBJECT,
+                'properties': properties,
+                'title': f'{model_name} Object including "{self.pk_attname}" attribute',
+            }
+
+        return _Meta
 
 
 class PhoneNumberField(DefaultPhoneNumberField):
