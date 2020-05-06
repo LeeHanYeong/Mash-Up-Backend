@@ -62,3 +62,25 @@ class EmailBackend:
             return User.objects.get(id=user_id)
         except User.DoesNotExist:
             return None
+
+
+class NameBackend:
+    def authenticate(self, request, name, password=None, **kwargs):
+        try:
+            user = User.objects.get(name=name, **kwargs)
+        except User.DoesNotExist:
+            return None
+        except User.MultipleObjectsReturned:
+            return None
+        if user.password:
+            if user.check_password(password):
+                return user
+            return None
+        else:
+            return user
+
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return None

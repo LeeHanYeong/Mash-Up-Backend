@@ -6,9 +6,11 @@ from django.contrib.auth.views import (
     PasswordResetDoneView,
     PasswordResetConfirmView,
     PasswordResetCompleteView,
-)
+    LogoutView, PasswordChangeView)
 from django.urls import path, include
 
+from events.lol.views import IndexView
+from members.views import LoginView, PasswordSetView
 from .push import push_router
 from .. import views, apis
 from ..doc import RedocSchemaView
@@ -16,12 +18,19 @@ from ..doc import RedocSchemaView
 admin.site.site_header = 'Mash-Up 관리사이트'
 
 urlpatterns_views = [
-    path('', views.IndexView.as_view(), name='index'),
+    # path('', views.IndexView.as_view(), name='index'),
+    path('', IndexView.as_view(), name='index'),
     path('push/', views.PushView.as_view(), name='push'),
+    path('password-set/', PasswordSetView.as_view(), name='password_set'),
+    path('password-change/', PasswordChangeView.as_view(), name='password_change'),
     path('password-reset/', PasswordResetView.as_view(), name='password_reset'),
     path('password-reset/done/', PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('events/', include('events.urls')),
 ]
 urlpatterns_apis = [
     path('push/fcm/test/', apis.FCMTestAPIView.as_view()),

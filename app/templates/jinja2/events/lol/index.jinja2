@@ -1,0 +1,17 @@
+{% extends 'base.jinja2' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h4>제1회 Mash-Up LOL리그</h4>
+                <h5>참가자 목록</h5>
+                <ul>
+                    {% for player in players %}
+                    <li>{{ player }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

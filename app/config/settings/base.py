@@ -63,6 +63,7 @@ STATICFILES_DIRS = [STATIC_DIR]
 
 # Auth
 LOGIN_URL = 'admin:login'
+LOGOUT_REDIRECT_URL = 'index'
 AUTH_USER_MODEL = 'members.User'
 ADMIN_USERNAME = 'lhy'
 ADMIN_PASSWORD = 'pbkdf2_sha256$120000$9SEp9OZWB5Ya$TVY41qkSk2g5WsPuXXYmYtCh1NwFO5ckJFIyMV8Yi4E='
@@ -71,6 +72,7 @@ AUTHENTICATION_BACKENDS = [
     'members.backends.SettingsBackend',
     'members.backends.PhoneNumberBackend',
     'members.backends.EmailBackend',
+    'members.backends.NameBackend',
 ]
 
 # django-push-notifications
@@ -100,7 +102,11 @@ ADMIN_REORDER = (
         'members.Period',
         'members.Team',
     )},
-
+    # 이벤트(LOL)
+    # {'app': 'lol', 'label': 'LOL', 'models': (
+    #     'lol.Player',
+    # )},
+    'lol',
     'auth',
     'push_notifications',
 )
@@ -187,6 +193,7 @@ DJANGO_APPS = [
     'members.apps.MembersConfig',
     'notice.apps.NoticeConfig',
     'study.apps.StudyConfig',
+    'events.lol',
     'utils',
 ]
 DEFAULT_APPS = [
@@ -230,6 +237,7 @@ MIDDLEWARE = [
 
     'admin_reorder.middleware.ModelAdminReorder',
     'simple_history.middleware.HistoryRequestMiddleware',
+    'members.middleware.RequirePasswordMiddleware',
 ]
 
 TEMPLATES = [

@@ -21,6 +21,15 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <div class="mr-auto"></div>
                 <ul class="navbar-nav">
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{ url('logout') }}" class="nav-link">Logout</a>
+                    </li>
+                    {% else %}
+                        <li class="nav-item">
+                        <a href="{{ url('login') }}" class="nav-link">Login</a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="https://github.com/leehanyeong/Mash-Up-Backend" target="_blank">Repository</a>
                     </li>
