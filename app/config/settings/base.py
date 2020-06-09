@@ -113,10 +113,16 @@ ADMIN_REORDER = (
 
 # DRF
 REST_FRAMEWORK = {
+    # Authentication
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
+    # Permissions
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    # Renderer & Parser
     'DEFAULT_RENDERER_CLASSES': (
         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
@@ -126,17 +132,21 @@ REST_FRAMEWORK = {
         'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
         'djangorestframework_camel_case.parser.CamelCaseJSONParser',
     ),
+    # Filter backends
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
     # Pagination
     'DEFAULT_PAGINATION_CLASS': 'utils.drf.pagination.DefaultPageNumberPagination',
 
+    # Exception
+    'EXCEPTION_HANDLER': 'utils.drf.exceptions.rest_exception_handler',
+
     # Custom
     'JSON_UNDERSCOREIZE': {
         'no_underscore_before_number': True,
     },
-    'EXCEPTION_HANDLER': 'utils.drf.exceptions.rest_exception_handler',
+
 }
 
 # drf-yasg
