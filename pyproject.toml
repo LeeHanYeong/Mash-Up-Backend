@@ -48,7 +48,6 @@ model_bakery = "^1.0.1"
 
 # Deploy
 sentry-sdk = "^0.13.2"
-gunicorn = "^20.0.0"
 python-dotenv = "^0.12.0"
 
 [tool.poetry.dev-dependencies]
