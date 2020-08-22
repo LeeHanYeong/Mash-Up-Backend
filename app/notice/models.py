@@ -4,7 +4,19 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
-from django.db.models import F, Count, Q, OuterRef, Exists
+from django.db.models import (
+    F,
+    Count,
+    Q,
+    OuterRef,
+    Subquery,
+    Case,
+    When,
+    Value,
+    BooleanField,
+    CharField,
+)
+from django_aid.django.model import Manager, QuerySet
 from django_extensions.db.models import TimeStampedModel
 from push_notifications.models import Device, GCMDevice, APNSDevice
 from safedelete.models import SafeDeleteModel
@@ -23,13 +35,22 @@ __all__ = (
 )
 
 
-class NoticeQuerySet(models.QuerySet):
+class NoticeQuerySet(QuerySet):
     def with_voted(self, user):
         if user.is_authenticated:
-            is_voted = Attendance.objects.filter(
+            user_vote = Attendance.objects.filter(
                 notice=OuterRef("id"), user=user,
-            ).exclude(vote=Attendance.VOTE_UNSELECTED)
-            return self.annotate(is_voted=Exists(is_voted))
+            ).values("vote")
+
+            return self.annotate(
+                vote=Subquery(user_vote),
+                vote_display=Case(*Attendance.WHENS_VOTE, output_field=CharField()),
+                is_voted=Case(
+                    When(vote="unselected", then=Value(False)),
+                    default=Value(True),
+                    output_field=BooleanField(),
+                ),
+            )
         return self
 
     def with_count(self):
@@ -49,7 +70,7 @@ class NoticeQuerySet(models.QuerySet):
         )
 
 
-class NoticeManager(models.Manager):
+class NoticeManager(Manager):
     ORDERING = F("start_at").desc(nulls_last=True), "-id"
 
     def get_queryset(self):
@@ -59,15 +80,6 @@ class NoticeManager(models.Manager):
             .prefetch_related("author__user_period_team_set",)
             .order_by(*self.ORDERING)
         )
-
-    def with_voted(self, user):
-        return self.get_queryset().with_voted(user).order_by(*self.ORDERING)
-
-    def with_count(self):
-        return self.get_queryset().with_count().order_by(*self.ORDERING)
-
-    def with_attendance_set(self):
-        return self.get_queryset().with_attendance_set()().order_by(*self.ORDERING)
 
 
 class Notice(Model):
@@ -120,7 +132,7 @@ class Notice(Model):
         blank=True,
     )
 
-    objects = NoticeManager()
+    objects = NoticeManager.from_queryset(NoticeQuerySet)()
 
     class Meta:
         verbose_name = "공지"
@@ -138,7 +150,6 @@ class Notice(Model):
                 raise ValidationError("팀별 공지인 경우, 해당 팀을 선택해야 합니다")
 
     def save(self, **kwargs):
-        print(self.type)
         self.clean()
         super().save()
 
@@ -153,7 +164,7 @@ class Notice(Model):
                 self.attendance_set.get_or_create(user=user)
 
 
-class AttendanceManager(models.Manager):
+class AttendanceManager(Manager):
     def get_queryset(self):
         return super().get_queryset().select_related("notice", "user",)
 
@@ -173,6 +184,8 @@ class Attendance(Model):
         (VOTE_ABSENT, "미참여"),
         (VOTE_LATE, "지각"),
     )
+    WHENS_VOTE = [When(vote=k, then=Value(v)) for k, v in CHOICES_VOTE]
+
     notice = models.ForeignKey(
         Notice,
         verbose_name="공지",
