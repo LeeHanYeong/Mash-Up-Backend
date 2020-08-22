@@ -15,8 +15,8 @@ from .serializers import (
 )
 
 __all__ = (
-    'NoticeViewSet',
-    'AttendanceViewSet',
+    "NoticeViewSet",
+    "AttendanceViewSet",
 )
 
 
@@ -28,15 +28,15 @@ class NoticeViewSet(ModelViewSet):
         NoticeAuthorOnlyUpdateDestroy,
     )
     serializer_classes = {
-        'list': NoticeSerializer,
-        'retrieve': NoticeDetailSerializer,
-        'create': NoticeCreateUpdateSerializer,
-        'update': NoticeCreateUpdateSerializer,
+        "list": NoticeSerializer,
+        "retrieve": NoticeDetailSerializer,
+        "create": NoticeCreateUpdateSerializer,
+        "update": NoticeCreateUpdateSerializer,
     }
 
     def get_queryset(self):
         qs = self.queryset.with_voted(user=self.request.user)
-        if self.action == 'retrieve':
+        if self.action == "retrieve":
             qs = qs.with_attendance_set()
         return qs
 
@@ -56,7 +56,7 @@ class AttendanceViewSet(UpdateModelViewSet):
         try:
             attendance = super().get_object()
         except (Attendance.DoesNotExist, AssertionError, Http404):
-            notice_id = self.request.data.get('notice_id')
+            notice_id = self.request.data.get("notice_id")
             notice = get_object_or_exception(Notice, NoticeNotFound, id=notice_id)
             attendance = notice.attendance_set.get(user=self.request.user)
         return attendance

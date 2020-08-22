@@ -7,27 +7,18 @@ import members.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('members', '0002_create_initial'),
+        ("members", "0002_create_initial"),
     ]
 
     operations = [
         migrations.AlterModelManagers(
-            name='user',
-            managers=[
-                ('objects', members.models.UserManager()),
-            ],
+            name="user", managers=[("objects", members.models.UserManager()),],
         ),
-        migrations.RemoveField(
-            model_name='user',
-            name='first_name',
-        ),
-        migrations.RemoveField(
-            model_name='user',
-            name='last_name',
-        ),
+        migrations.RemoveField(model_name="user", name="first_name",),
+        migrations.RemoveField(model_name="user", name="last_name",),
         migrations.AddField(
-            model_name='user',
-            name='name',
-            field=models.CharField(blank=True, max_length=50, verbose_name='이름'),
+            model_name="user",
+            name="name",
+            field=models.CharField(blank=True, max_length=50, verbose_name="이름"),
         ),
     ]

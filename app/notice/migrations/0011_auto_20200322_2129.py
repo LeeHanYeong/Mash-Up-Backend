@@ -7,19 +7,33 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('members', '0015_auto_20200223_1726'),
-        ('notice', '0010_auto_20200322_2104'),
+        ("members", "0015_auto_20200223_1726"),
+        ("notice", "0010_auto_20200322_2104"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='historicalnotice',
-            name='period',
-            field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='members.Period', verbose_name='해당 기수'),
+            model_name="historicalnotice",
+            name="period",
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="+",
+                to="members.Period",
+                verbose_name="해당 기수",
+            ),
         ),
         migrations.AddField(
-            model_name='notice',
-            name='period',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='members.Period', verbose_name='해당 기수'),
+            model_name="notice",
+            name="period",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="members.Period",
+                verbose_name="해당 기수",
+            ),
         ),
     ]

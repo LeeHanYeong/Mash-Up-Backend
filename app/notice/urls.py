@@ -5,35 +5,35 @@ from utils.drf.doc import schema
 from . import apis
 from .serializers import NoticeDetailSerializer
 
-app_name = 'notices'
+app_name = "notices"
 
 router = SimpleRouter()
-router.register(r'', schema(
-    apis.NoticeViewSet, (
-        ('list', {
-            'operation_description': '공지사항 목록',
-        }),
-        ('create', {
-            'operation_description': '공지사항 생성',
-            'responses': {
-                201: NoticeDetailSerializer(),
-            },
-        }),
-        ('retrieve', {
-            'operation_description': '공지사항 상세',
-        }),
-        ('update', {
-            'operation_description': '공지사항 수정',
-            'responses': {
-                200: NoticeDetailSerializer(),
-            },
-        }),
-        ('destroy', {
-            'operation_description': '공지사항 삭제',
-        }),
+router.register(
+    r"",
+    schema(
+        apis.NoticeViewSet,
+        (
+            ("list", {"operation_description": "공지사항 목록",}),
+            (
+                "create",
+                {
+                    "operation_description": "공지사항 생성",
+                    "responses": {201: NoticeDetailSerializer(),},
+                },
+            ),
+            ("retrieve", {"operation_description": "공지사항 상세",}),
+            (
+                "update",
+                {
+                    "operation_description": "공지사항 수정",
+                    "responses": {200: NoticeDetailSerializer(),},
+                },
+            ),
+            ("destroy", {"operation_description": "공지사항 삭제",}),
+        ),
     ),
-))
-DOC_ATTENDANCE_UPDATE = '''
+)
+DOC_ATTENDANCE_UPDATE = """
 **공지참여 투표 수정**
 
 두 가지 방법으로 사용 가능
@@ -44,15 +44,16 @@ DOC_ATTENDANCE_UPDATE = '''
     - URL: `/notices/attendances/`
     - 이 경우, 반드시 noticeId를 request body에 담아 보내야 함
     - 해당 Notice에서 요청한 사용자의 투표현황을 수정함
-'''
+"""
 
 urlpatterns = [
     # id가 optional
-    re_path(r'attendances/(?:(?P<pk>\d+)/)?$', schema(
-        apis.AttendanceViewSet, (
-            ('update', {
-                'operation_description': DOC_ATTENDANCE_UPDATE,
-            }),
-        )).as_view({'patch': 'partial_update'})),
-    path('', include(router.urls)),
+    re_path(
+        r"attendances/(?:(?P<pk>\d+)/)?$",
+        schema(
+            apis.AttendanceViewSet,
+            (("update", {"operation_description": DOC_ATTENDANCE_UPDATE,}),),
+        ).as_view({"patch": "partial_update"}),
+    ),
+    path("", include(router.urls)),
 ]

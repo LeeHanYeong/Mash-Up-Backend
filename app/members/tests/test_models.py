@@ -15,5 +15,5 @@ class PeriodModelTest(TestCase):
 
 class EmailValidationModelTest(TestCase):
     def test_save(self):
-        email_validation = baker.make(EmailValidation, code='')
+        email_validation = baker.make(EmailValidation, code="")
         self.assertTrue(email_validation.code)

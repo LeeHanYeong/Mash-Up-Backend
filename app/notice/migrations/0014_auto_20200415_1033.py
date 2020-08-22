@@ -6,26 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notice', '0013_auto_20200323_1404'),
+        ("notice", "0013_auto_20200323_1404"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='notice',
-            options={'verbose_name': '공지', 'verbose_name_plural': '공지 목록'},
+            name="notice",
+            options={"verbose_name": "공지", "verbose_name_plural": "공지 목록"},
         ),
         migrations.AlterField(
-            model_name='historicalnotice',
-            name='start_at',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='일시'),
+            model_name="historicalnotice",
+            name="start_at",
+            field=models.DateTimeField(blank=True, null=True, verbose_name="일시"),
         ),
         migrations.AlterField(
-            model_name='notice',
-            name='start_at',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='일시'),
+            model_name="notice",
+            name="start_at",
+            field=models.DateTimeField(blank=True, null=True, verbose_name="일시"),
         ),
         migrations.AddIndex(
-            model_name='notice',
-            index=models.Index(fields=['start_at'], name='notice_noti_start_a_86303c_idx'),
+            model_name="notice",
+            index=models.Index(
+                fields=["start_at"], name="notice_noti_start_a_86303c_idx"
+            ),
         ),
     ]

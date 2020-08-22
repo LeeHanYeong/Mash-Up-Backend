@@ -6,12 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('members', '0008_auto_20190826_1848'),
+        ("members", "0008_auto_20190826_1848"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='user',
-            options={'ordering': ('name',), 'verbose_name': '사용자', 'verbose_name_plural': '사용자 목록'},
+            name="user",
+            options={
+                "ordering": ("name",),
+                "verbose_name": "사용자",
+                "verbose_name_plural": "사용자 목록",
+            },
         ),
     ]

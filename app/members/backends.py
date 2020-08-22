@@ -7,7 +7,7 @@ User = get_user_model()
 
 class SettingsBackend:
     def authenticate(self, request, username=None, password=None):
-        login_valid = (settings.ADMIN_USERNAME == username)
+        login_valid = settings.ADMIN_USERNAME == username
         pwd_valid = check_password(password, settings.ADMIN_PASSWORD)
         if login_valid and pwd_valid:
             try:

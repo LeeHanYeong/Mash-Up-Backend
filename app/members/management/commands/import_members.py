@@ -11,7 +11,7 @@ from members.models import Period, Team
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        path = os.path.join(settings.ROOT_DIR, '.temp', 'members.xlsx')
+        path = os.path.join(settings.ROOT_DIR, ".temp", "members.xlsx")
         book = openpyxl.load_workbook(path)
         sheet = book.worksheets[0]
 
@@ -27,11 +27,11 @@ class Command(BaseCommand):
             if data_list[1] is None:
                 continue
             cur_member = {
-                'name': data_list[1].strip(),
-                'birth': data_list[2],
-                'email': data_list[3].strip(),
-                'period': data_list[4],
-                'phone': str(data_list[5]).strip(),
+                "name": data_list[1].strip(),
+                "birth": data_list[2],
+                "email": data_list[3].strip(),
+                "period": data_list[4],
+                "phone": str(data_list[5]).strip(),
             }
             members[current_team].append(cur_member)
 
@@ -41,8 +41,8 @@ class Command(BaseCommand):
 
                 for member_info in member_info_list:
                     data = {
-                        'name': member_info['name'],
-                        'email': member_info['email'],
+                        "name": member_info["name"],
+                        "email": member_info["email"],
                     }
                     form = UserCreationForm(data=data)
                     if form.is_valid():
@@ -52,26 +52,27 @@ class Command(BaseCommand):
                             continue
 
                         try:
-                            user.birth_date = member_info['birth']
+                            user.birth_date = member_info["birth"]
                             user.save()
                         except Exception as eb1:
                             try:
                                 user.birth_date = datetime.strptime(
-                                    member_info['birth'].replace(' ', ''), '%Y.%m.%d').date()
+                                    member_info["birth"].replace(" ", ""), "%Y.%m.%d"
+                                ).date()
                                 user.save()
                             except Exception as eb2:
                                 user.birth_date = None
-                                print('error birth!', member_info['birth'])
+                                print("error birth!", member_info["birth"])
                                 print(eb1)
                                 print(eb2)
                                 print()
 
                         try:
-                            user.phone_number = member_info['phone']
+                            user.phone_number = member_info["phone"]
                             user.save()
                         except Exception as e1:
                             try:
-                                phone = '0' + member_info['phone']
+                                phone = "0" + member_info["phone"]
                                 user.phone_number = phone
                                 user.save()
                             except Exception as e2:
@@ -82,8 +83,7 @@ class Command(BaseCommand):
                                 print()
 
                         user.user_period_team_set.get_or_create(
-                            period=period,
-                            team=team,
+                            period=period, team=team,
                         )
                         user.save()
                     else:

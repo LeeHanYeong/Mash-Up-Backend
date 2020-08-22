@@ -8,7 +8,7 @@ from members.serializers import AuthTokenSerializer
 
 
 class ProfileAPITest(APITestCase):
-    URL = '/api/members/profile/'
+    URL = "/api/members/profile/"
 
     def test_require_authenticate(self):
         baker.make(User)
@@ -26,7 +26,7 @@ class ProfileAPITest(APITestCase):
 
 
 class AuthTokenAPITest(APITestCase):
-    URL = '/api/members/auth-token/'
+    URL = "/api/members/auth-token/"
 
     def test_api(self):
         password = get_random_string(length=20)
@@ -35,14 +35,13 @@ class AuthTokenAPITest(APITestCase):
         user.save()
 
         data = {
-            'username': user.username,
-            'password': password,
+            "username": user.username,
+            "password": password,
         }
-        response = self.client.post(self.URL, data, format='json')
+        response = self.client.post(self.URL, data, format="json")
 
         user = User.objects.get(pk=user.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
-            AuthTokenSerializer(user.auth_token).data,
-            response.data,
+            AuthTokenSerializer(user.auth_token).data, response.data,
         )

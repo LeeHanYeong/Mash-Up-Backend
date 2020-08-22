@@ -8,23 +8,32 @@ import django_extensions.db.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('lol', '0001_initial'),
+        ("lol", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='player',
-            options={'get_latest_by': 'modified', 'ordering': ('-modified', '-created')},
+            name="player",
+            options={
+                "get_latest_by": "modified",
+                "ordering": ("-modified", "-created"),
+            },
         ),
         migrations.AddField(
-            model_name='player',
-            name='created',
-            field=django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, default=django.utils.timezone.now, verbose_name='created'),
+            model_name="player",
+            name="created",
+            field=django_extensions.db.fields.CreationDateTimeField(
+                auto_now_add=True,
+                default=django.utils.timezone.now,
+                verbose_name="created",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='player',
-            name='modified',
-            field=django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified'),
+            model_name="player",
+            name="modified",
+            field=django_extensions.db.fields.ModificationDateTimeField(
+                auto_now=True, verbose_name="modified"
+            ),
         ),
     ]

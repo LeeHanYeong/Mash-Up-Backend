@@ -4,14 +4,19 @@ from rest_framework import permissions
 from utils.drf.viewsets import ListModelViewSet, RetrieveModelViewSet
 from .filters import UserFilterSet
 from .models import Team, User, Period
-from .serializers import UserSerializer, TeamSerializer, PeriodSerializer, AuthTokenSerializer
+from .serializers import (
+    UserSerializer,
+    TeamSerializer,
+    PeriodSerializer,
+    AuthTokenSerializer,
+)
 
 __all__ = (
-    'TeamViewSet',
-    'PeriodViewSet',
-    'UserViewSet',
-    'ProfileViewSet',
-    'AuthTokenAPIView',
+    "TeamViewSet",
+    "PeriodViewSet",
+    "UserViewSet",
+    "ProfileViewSet",
+    "AuthTokenAPIView",
 )
 
 

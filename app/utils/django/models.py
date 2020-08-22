@@ -8,7 +8,7 @@ class Model(DefaultModel):
 
     @staticmethod
     def choices_help_text(choices):
-        return '<br>'.join([f'`{item[0]}`: {item[1]}\n' for item in choices])
+        return "<br>".join([f"`{item[0]}`: {item[1]}\n" for item in choices])
 
 
 class SafeDeleteHistoryModel(SafeDeleteModel):

@@ -1,7 +1,7 @@
 from django.urls import path, include
 
-app_name = 'events'
+app_name = "events"
 
 urlpatterns = [
-    path('lol/', include('events.lol.urls')),
+    path("lol/", include("events.lol.urls")),
 ]

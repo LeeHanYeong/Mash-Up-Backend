@@ -7,18 +7,34 @@ import utils.django.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notice', '0006_auto_20191218_1239'),
+        ("notice", "0006_auto_20191218_1239"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='attendance',
-            name='vote',
-            field=utils.django.fields.ChoiceField(choices=[('unselected', '미선택'), ('attend', '참여'), ('absent', '미참여'), ('late', '지각')], default='unselected', help_text='`unselected`: 미선택\n<br>`attend`: 참여\n<br>`absent`: 미참여\n<br>`late`: 지각\n', max_length=15, verbose_name='투표'),
+            model_name="attendance",
+            name="vote",
+            field=utils.django.fields.ChoiceField(
+                choices=[
+                    ("unselected", "미선택"),
+                    ("attend", "참여"),
+                    ("absent", "미참여"),
+                    ("late", "지각"),
+                ],
+                default="unselected",
+                help_text="`unselected`: 미선택\n<br>`attend`: 참여\n<br>`absent`: 미참여\n<br>`late`: 지각\n",
+                max_length=15,
+                verbose_name="투표",
+            ),
         ),
         migrations.AlterField(
-            model_name='notice',
-            name='type',
-            field=utils.django.fields.ChoiceField(choices=[('all', '전체 공지'), ('team', '팀별 공지'), ('project', '프로젝트 공지')], help_text='`all`: 전체 공지\n<br>`team`: 팀별 공지\n<br>`project`: 프로젝트 공지\n', max_length=10, verbose_name='공지유형'),
+            model_name="notice",
+            name="type",
+            field=utils.django.fields.ChoiceField(
+                choices=[("all", "전체 공지"), ("team", "팀별 공지"), ("project", "프로젝트 공지")],
+                help_text="`all`: 전체 공지\n<br>`team`: 팀별 공지\n<br>`project`: 프로젝트 공지\n",
+                max_length=10,
+                verbose_name="공지유형",
+            ),
         ),
     ]

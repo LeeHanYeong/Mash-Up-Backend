@@ -13,8 +13,7 @@ class AttendanceModelTest(TestCase):
         user = baker.make(User)
         notices = baker.make(Notice, type=Notice.TYPE_ALL, _quantity=10)
         attendances = [
-            baker.make(Attendance, user=user, notice=notice)
-            for notice in notices
+            baker.make(Attendance, user=user, notice=notice) for notice in notices
         ]
         attendance = attendances[0]
         attendance.vote = Attendance.VOTE_ATTEND

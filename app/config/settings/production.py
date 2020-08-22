@@ -6,35 +6,33 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 from .base import *
 
-AWS_SECRETS_MANAGER_SECRET_SECTION = 'mashup:production'
+AWS_SECRETS_MANAGER_SECRET_SECTION = "mashup:production"
 
 # AWS
-AWS_STORAGE_BUCKET_NAME = SECRETS['AWS_STORAGE_BUCKET_NAME']
+AWS_STORAGE_BUCKET_NAME = SECRETS["AWS_STORAGE_BUCKET_NAME"]
 
 DEBUG = False or (
-        len(sys.argv) > 1
-        and sys.argv[1] == 'runserver'
-        and platform.system() != 'Linux'
+    len(sys.argv) > 1 and sys.argv[1] == "runserver" and platform.system() != "Linux"
 )
 ALLOWED_HOSTS += [
-    'localhost',
-    'mashup.localhost',
-    '.elasticbeanstalk.com',
-    '.amazonaws.com',
-    'mashup.lhy.kr',
+    "localhost",
+    "mashup.localhost",
+    ".elasticbeanstalk.com",
+    ".amazonaws.com",
+    "mashup.lhy.kr",
 ]
-DATABASES = SECRETS['DATABASES']
-DBBACKUP_STORAGE_OPTIONS['bucket_name'] = SECRETS['AWS_STORAGE_BUCKET_NAME']
+DATABASES = SECRETS["DATABASES"]
+DBBACKUP_STORAGE_OPTIONS["bucket_name"] = SECRETS["AWS_STORAGE_BUCKET_NAME"]
 
 # Sentry
 sentry_sdk.init(
-    dsn=SECRETS['SENTRY_DSN'],
+    dsn=SECRETS["SENTRY_DSN"],
     integrations=[DjangoIntegration()],
     send_default_pii=True,
 )
 
 # WSGI
-WSGI_APPLICATION = 'config.wsgi.production.application'
+WSGI_APPLICATION = "config.wsgi.production.application"
 
 
 def is_ec2_linux():
@@ -52,13 +50,14 @@ def is_ec2_linux():
 def get_linux_ec2_private_ip():
     """Get the private IP Address of the machine if running on an EC2 linux server"""
     from urllib.request import urlopen
+
     if not is_ec2_linux():
         return None
     try:
-        response = urlopen('http://169.254.169.254/latest/meta-data/local-ipv4')
-        ec2_ip = response.read().decode('utf-8')
-        response = urlopen('http://169.254.169.254/latest/meta-data/local-hostname')
-        ec2_hostname = response.read().decode('utf-8')
+        response = urlopen("http://169.254.169.254/latest/meta-data/local-ipv4")
+        ec2_ip = response.read().decode("utf-8")
+        response = urlopen("http://169.254.169.254/latest/meta-data/local-hostname")
+        ec2_hostname = response.read().decode("utf-8")
         return ec2_ip
     except Exception as e:
         print(e)

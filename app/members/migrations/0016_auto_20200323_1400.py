@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('members', '0015_auto_20200223_1726'),
+        ("members", "0015_auto_20200223_1726"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='period_set',
-            field=models.ManyToManyField(blank=True, through='members.UserPeriodTeam', to='members.Period', verbose_name='활동기수'),
+            model_name="user",
+            name="period_set",
+            field=models.ManyToManyField(
+                blank=True,
+                through="members.UserPeriodTeam",
+                to="members.Period",
+                verbose_name="활동기수",
+            ),
         ),
     ]

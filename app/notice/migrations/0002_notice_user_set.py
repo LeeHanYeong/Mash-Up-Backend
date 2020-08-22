@@ -8,13 +8,19 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('notice', '0001_initial'),
+        ("notice", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='notice',
-            name='user_set',
-            field=models.ManyToManyField(blank=True, related_name='user_notice_set', through='notice.Attendance', to=settings.AUTH_USER_MODEL, verbose_name='투표할 사용자 목록'),
+            model_name="notice",
+            name="user_set",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="user_notice_set",
+                through="notice.Attendance",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="투표할 사용자 목록",
+            ),
         ),
     ]

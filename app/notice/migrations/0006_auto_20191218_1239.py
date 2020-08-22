@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notice', '0005_auto_20191217_2131'),
+        ("notice", "0005_auto_20191217_2131"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='notice',
-            name='type',
-            field=models.CharField(choices=[('all', '전체 공지'), ('team', '팀별 공지'), ('project', '프로젝트 공지')], help_text='`all`: 전체 공지\n<br>`team`: 팀별 공지\n<br>`project`: 프로젝트 공지\n', max_length=10, verbose_name='공지유형'),
+            model_name="notice",
+            name="type",
+            field=models.CharField(
+                choices=[("all", "전체 공지"), ("team", "팀별 공지"), ("project", "프로젝트 공지")],
+                help_text="`all`: 전체 공지\n<br>`team`: 팀별 공지\n<br>`project`: 프로젝트 공지\n",
+                max_length=10,
+                verbose_name="공지유형",
+            ),
         ),
     ]

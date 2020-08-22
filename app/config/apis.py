@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from utils.drf.exceptions import SendPushException
 
 __all__ = (
-    'PushTestSerializer',
-    'FCMTestAPIView',
+    "PushTestSerializer",
+    "FCMTestAPIView",
 )
 
 
@@ -21,33 +21,36 @@ class PushTestSerializer(serializers.Serializer):
 
     class Meta:
         fields = (
-            'registration_id',
-            'message',
-            'extra',
+            "registration_id",
+            "message",
+            "extra",
         )
 
     def _get_object(self):
-        return GCMDevice.objects.get(registration_id=self.validated_data['registration_id'])
+        return GCMDevice.objects.get(
+            registration_id=self.validated_data["registration_id"]
+        )
 
     def validate_registration_id(self, value):
         if not GCMDevice.objects.filter(registration_id=value).exists():
-            raise ValidationError('주어진 registration_id에 해당하는 GCM/FCM등록기기가 없습니다')
+            raise ValidationError("주어진 registration_id에 해당하는 GCM/FCM등록기기가 없습니다")
         return value
 
     def send_message(self):
         gcm_device = self._get_object()
         return gcm_device.send_message(
-            message=self.validated_data.get('message', ''),
-            extra=self.validated_data.get('extra', {}),
+            message=self.validated_data.get("message", ""),
+            extra=self.validated_data.get("extra", {}),
         )
 
 
 @method_decorator(
-    name='post', decorator=swagger_auto_schema(
-        operation_summary='FCM Send Test',
-        operation_description='FCM Push Test',
+    name="post",
+    decorator=swagger_auto_schema(
+        operation_summary="FCM Send Test",
+        operation_description="FCM Push Test",
         responses={
-            status.HTTP_200_OK: '''
+            status.HTTP_200_OK: """
 > FCM Send Result
 ```
 {
@@ -63,9 +66,9 @@ class PushTestSerializer(serializers.Serializer):
     ]
 }
 ```
-'''
-        }
-    )
+"""
+        },
+    ),
 )
 class FCMTestAPIView(generics.GenericAPIView):
     queryset = GCMDevice.objects.all()

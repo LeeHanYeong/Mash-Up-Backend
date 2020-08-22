@@ -6,11 +6,11 @@ from .models import Player, Position
 
 
 class PlayerForm(forms.ModelForm):
-    user = forms.ModelChoiceField(queryset=User.objects.order_by('name'))
+    user = forms.ModelChoiceField(queryset=User.objects.order_by("name"))
 
     class Meta:
         model = Player
-        fields = '__all__'
+        fields = "__all__"
 
 
 @admin.register(Player)

@@ -12,42 +12,147 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('members', '0009_auto_20190826_1902'),
+        ("members", "0009_auto_20190826_1902"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Notice',
+            name="Notice",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('title', models.CharField(max_length=100, verbose_name='공지명')),
-                ('start_at', models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='일시')),
-                ('duration', models.DurationField(blank=True, null=True, verbose_name='예상 진행시간')),
-                ('address1', models.CharField(blank=True, help_text='도로명/지번 주소', max_length=200, verbose_name='주소')),
-                ('address2', models.CharField(blank=True, help_text='건물명/층/호수/상세장소 등', max_length=100, verbose_name='상세주소')),
-                ('description', models.TextField(blank=True, verbose_name='설명')),
-                ('author', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='notice_set', to=settings.AUTH_USER_MODEL, verbose_name='작성자')),
-                ('team', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='notice_set', to='members.Team', verbose_name='팀')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                ("title", models.CharField(max_length=100, verbose_name="공지명")),
+                (
+                    "start_at",
+                    models.DateTimeField(
+                        blank=True, db_index=True, null=True, verbose_name="일시"
+                    ),
+                ),
+                (
+                    "duration",
+                    models.DurationField(blank=True, null=True, verbose_name="예상 진행시간"),
+                ),
+                (
+                    "address1",
+                    models.CharField(
+                        blank=True,
+                        help_text="도로명/지번 주소",
+                        max_length=200,
+                        verbose_name="주소",
+                    ),
+                ),
+                (
+                    "address2",
+                    models.CharField(
+                        blank=True,
+                        help_text="건물명/층/호수/상세장소 등",
+                        max_length=100,
+                        verbose_name="상세주소",
+                    ),
+                ),
+                ("description", models.TextField(blank=True, verbose_name="설명")),
+                (
+                    "author",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="notice_set",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="작성자",
+                    ),
+                ),
+                (
+                    "team",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="notice_set",
+                        to="members.Team",
+                        verbose_name="팀",
+                    ),
+                ),
             ],
-            options={
-                'verbose_name': '공지',
-                'verbose_name_plural': '공지 목록',
-            },
+            options={"verbose_name": "공지", "verbose_name_plural": "공지 목록",},
         ),
         migrations.CreateModel(
-            name='Attendance',
+            name="Attendance",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('vote', models.CharField(choices=[('unselected', '미선택'), ('attend', '참여'), ('absent', '미참여'), ('late', '지각')], default='unselected', max_length=15, verbose_name='투표')),
-                ('result', models.CharField(blank=True, choices=[('unselected', '미선택'), ('attend', '참여'), ('absent', '미참여'), ('late', '지각')], max_length=15, verbose_name='실제 참석결과')),
-                ('notice', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='attendance_set', to='notice.Notice', verbose_name='공지')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='attendance_set', to=settings.AUTH_USER_MODEL, verbose_name='사용자')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "vote",
+                    models.CharField(
+                        choices=[
+                            ("unselected", "미선택"),
+                            ("attend", "참여"),
+                            ("absent", "미참여"),
+                            ("late", "지각"),
+                        ],
+                        default="unselected",
+                        max_length=15,
+                        verbose_name="투표",
+                    ),
+                ),
+                (
+                    "result",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("unselected", "미선택"),
+                            ("attend", "참여"),
+                            ("absent", "미참여"),
+                            ("late", "지각"),
+                        ],
+                        max_length=15,
+                        verbose_name="실제 참석결과",
+                    ),
+                ),
+                (
+                    "notice",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="attendance_set",
+                        to="notice.Notice",
+                        verbose_name="공지",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="attendance_set",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="사용자",
+                    ),
+                ),
             ],
-            options={
-                'verbose_name': '공지 참석 투표',
-                'verbose_name_plural': '공지 참석 투표 목록',
-            },
+            options={"verbose_name": "공지 참석 투표", "verbose_name_plural": "공지 참석 투표 목록",},
         ),
     ]

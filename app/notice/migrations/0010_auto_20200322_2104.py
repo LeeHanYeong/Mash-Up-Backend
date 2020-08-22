@@ -8,26 +8,36 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notice', '0009_auto_20200322_2020'),
+        ("notice", "0009_auto_20200322_2020"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='attendance',
-            name='_history_user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='history_attendance_set', related_query_name='history_attendance', to=settings.AUTH_USER_MODEL),
+            model_name="attendance",
+            name="_history_user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="history_attendance_set",
+                related_query_name="history_attendance",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
-            model_name='notice',
-            name='_history_user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='history_notice_set', related_query_name='history_notice', to=settings.AUTH_USER_MODEL),
+            model_name="notice",
+            name="_history_user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="history_notice_set",
+                related_query_name="history_notice",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterModelTable(
-            name='historicalattendance',
-            table='_history_attendance',
+            name="historicalattendance", table="_history_attendance",
         ),
-        migrations.AlterModelTable(
-            name='historicalnotice',
-            table='_history_notice',
-        ),
+        migrations.AlterModelTable(name="historicalnotice", table="_history_notice",),
     ]

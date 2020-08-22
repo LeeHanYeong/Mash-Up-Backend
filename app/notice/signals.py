@@ -7,24 +7,26 @@ from push_notifications.models import GCMDevice
 from utils.push import case
 from .models import Notice, Attendance
 
-logger = logging.getLogger('signal')
+logger = logging.getLogger("signal")
 
 
 @receiver(post_save, sender=Notice)
 def notice_post_save(sender, instance, created, **kwargs):
     from utils.push.serializers import NoticePushSerializer
-    logger.info(f'notice_created (id: {instance.id})')
+
+    logger.info(f"notice_created (id: {instance.id})")
     gcm_devices = GCMDevice.objects.filter(user__user_notice_set=instance)
     message = f'"{instance.title}" 공지가 {"등록" if created else "수정"}되었습니다'
     extra = {
-        'case': case.NOTICE_CREATED if created else case.NOTICE_MODIFIED,
-        'data': NoticePushSerializer(instance).data,
+        "case": case.NOTICE_CREATED if created else case.NOTICE_MODIFIED,
+        "data": NoticePushSerializer(instance).data,
     }
     gcm_devices.send_message(message, extra=extra)
 
 
 def notice_resend(instance):
     from utils.push.serializers import NoticePushSerializer
+
     # GCMDevice의 필터 기준으로 user를 사용
     # 사용자가 투표할 사용자로 포함된 Notice이며,
     #  사용자의 참석투표의 notice가 Notice이며
@@ -40,7 +42,7 @@ def notice_resend(instance):
     )
     message = f'"{instance.title}" 공지가 수정되었습니다'
     extra = {
-        'case': case.NOTICE_MODIFIED,
-        'data': NoticePushSerializer(instance).data,
+        "case": case.NOTICE_MODIFIED,
+        "data": NoticePushSerializer(instance).data,
     }
     gcm_devices.send_message(message, extra=extra)

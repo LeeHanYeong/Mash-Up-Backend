@@ -5,19 +5,17 @@ from .models import User
 
 class UserFilterSet(filters.FilterSet):
     period = filters.NumberFilter(
-        field_name='user_period_team__period', distinct=True,
-        help_text='기수(Period) id',
+        field_name="user_period_team__period", distinct=True, help_text="기수(Period) id",
     )
     team = filters.NumberFilter(
-        field_name='user_period_team__team', distinct=True,
-        help_text='팀(Team) id'
+        field_name="user_period_team__team", distinct=True, help_text="팀(Team) id"
     )
 
     class Meta:
         model = User
         fields = (
-            'period',
-            'team',
+            "period",
+            "team",
         )
 
     # def filter_period(self, queryset, name, value):

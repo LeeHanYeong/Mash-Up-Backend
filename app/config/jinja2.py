@@ -19,8 +19,8 @@ def query(request=None, only=False, **kwargs):
         query_params = {k: v for k, v in query_params.items() if v}
 
     if query_params:
-        return '?' + '&'.join([f'{k}={v}' for k, v in query_params.items()])
-    return ''
+        return "?" + "&".join([f"{k}={v}" for k, v in query_params.items()])
+    return ""
 
 
 def date(value):
@@ -41,21 +41,25 @@ def time(value):
 
 
 def environment(**options):
-    extensions = options.get('extensions', [])
-    options['extensions'] = extensions
+    extensions = options.get("extensions", [])
+    options["extensions"] = extensions
 
     env = Environment(**options)
-    env.globals.update({
-        'static': static,
-        'url': reverse,
-        'query': query,
-        'get_messages': messages.get_messages,
-        'localtime': template_localtime,
-    })
-    env.filters.update({
-        'localtime': template_localtime,
-        'date': date,
-        'time': time,
-        'intcomma': intcomma,
-    })
+    env.globals.update(
+        {
+            "static": static,
+            "url": reverse,
+            "query": query,
+            "get_messages": messages.get_messages,
+            "localtime": template_localtime,
+        }
+    )
+    env.filters.update(
+        {
+            "localtime": template_localtime,
+            "date": date,
+            "time": time,
+            "intcomma": intcomma,
+        }
+    )
     return env

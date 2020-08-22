@@ -6,16 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('members', '0013_emailvalidation'),
+        ("members", "0013_emailvalidation"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='user',
-            options={'ordering': ('name', '-id'), 'verbose_name': '사용자', 'verbose_name_plural': '사용자 목록'},
+            name="user",
+            options={
+                "ordering": ("name", "-id"),
+                "verbose_name": "사용자",
+                "verbose_name_plural": "사용자 목록",
+            },
         ),
         migrations.AddIndex(
-            model_name='user',
-            index=models.Index(fields=['username'], name='members_use_usernam_82d39a_idx'),
+            model_name="user",
+            index=models.Index(
+                fields=["username"], name="members_use_usernam_82d39a_idx"
+            ),
         ),
     ]

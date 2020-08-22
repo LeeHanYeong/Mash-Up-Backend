@@ -9,28 +9,56 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('notice', '0008_auto_20200322_1902'),
+        ("notice", "0008_auto_20200322_1902"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='attendance',
-            name='_history_user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='history_attendance_set', related_query_name='history_attendance', to=settings.AUTH_USER_MODEL),
+            model_name="attendance",
+            name="_history_user",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="history_attendance_set",
+                related_query_name="history_attendance",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='historicalattendance',
-            name='_history_user',
-            field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', related_query_name='history_attendance', to=settings.AUTH_USER_MODEL),
+            model_name="historicalattendance",
+            name="_history_user",
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="+",
+                related_query_name="history_attendance",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='historicalnotice',
-            name='_history_user',
-            field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', related_query_name='history_notice', to=settings.AUTH_USER_MODEL),
+            model_name="historicalnotice",
+            name="_history_user",
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="+",
+                related_query_name="history_notice",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='notice',
-            name='_history_user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='history_notice_set', related_query_name='history_notice', to=settings.AUTH_USER_MODEL),
+            model_name="notice",
+            name="_history_user",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="history_notice_set",
+                related_query_name="history_notice",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

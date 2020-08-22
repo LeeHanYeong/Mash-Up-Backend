@@ -6,17 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('members', '0003_auto_20190813_0341'),
+        ("members", "0003_auto_20190813_0341"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='github',
-            field=models.CharField(blank=True, max_length=50, verbose_name='GitHub 사용자명'),
+            model_name="user",
+            name="github",
+            field=models.CharField(
+                blank=True, max_length=50, verbose_name="GitHub 사용자명"
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='userperiodteam',
-            unique_together={('user', 'period')},
+            name="userperiodteam", unique_together={("user", "period")},
         ),
     ]

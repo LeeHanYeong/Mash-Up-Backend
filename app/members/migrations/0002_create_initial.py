@@ -5,11 +5,11 @@ from django.db import migrations
 
 def forwards_func(apps, schema_editor):
     db_alias = schema_editor.connection.alias
-    Team = apps.get_model('members', 'Team')
-    Period = apps.get_model('members', 'Period')
-    Group = apps.get_model('auth', 'Group')
+    Team = apps.get_model("members", "Team")
+    Period = apps.get_model("members", "Period")
+    Group = apps.get_model("auth", "Group")
 
-    team_name_list = ['백엔드', 'iOS', '안드로이드', '디자인', '웹', '브랜딩']
+    team_name_list = ["백엔드", "iOS", "안드로이드", "디자인", "웹", "브랜딩"]
     for team_name in team_name_list:
         Team.objects.using(db_alias).create(name=team_name)
 
@@ -17,25 +17,23 @@ def forwards_func(apps, schema_editor):
     for period_number in period_number_list:
         Period.objects.using(db_alias).create(number=period_number)
 
-    Group.objects.using(db_alias).get_or_create(name='운영진')
+    Group.objects.using(db_alias).get_or_create(name="운영진")
 
 
 def reverse_func(apps, schema_editor):
     db_alias = schema_editor.connection.alias
-    Team = apps.get_model('members', 'Team')
-    Period = apps.get_model('members', 'Period')
-    Group = apps.get_model('auth', 'Group')
+    Team = apps.get_model("members", "Team")
+    Period = apps.get_model("members", "Period")
+    Group = apps.get_model("auth", "Group")
 
     Team.objects.using(db_alias).all().delete()
     Period.objects.using(db_alias).all().delete()
-    Group.objects.using(db_alias).filter(name='운영진').delete()
+    Group.objects.using(db_alias).filter(name="운영진").delete()
 
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('members', '0001_initial'),
+        ("members", "0001_initial"),
     ]
 
-    operations = [
-        migrations.RunPython(forwards_func, reverse_func)
-    ]
+    operations = [migrations.RunPython(forwards_func, reverse_func)]
