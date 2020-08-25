@@ -509,6 +509,23 @@ version = "1.0.1"
 
 [[package]]
 category = "main"
+description = "WSGI HTTP Server for UNIX"
+name = "gunicorn"
+optional = false
+python-versions = ">=3.4"
+version = "20.0.4"
+
+[package.dependencies]
+setuptools = ">=3.0"
+
+[package.extras]
+eventlet = ["eventlet (>=0.9.7)"]
+gevent = ["gevent (>=0.13)"]
+setproctitle = ["setproctitle"]
+tornado = ["tornado (>=0.2)"]
+
+[[package]]
+category = "main"
 description = "HTTP/2 State-Machine based protocol implementation"
 marker = "python_version >= \"3.5\""
 name = "h2"
@@ -1381,7 +1398,7 @@ python-versions = "*"
 version = "0.5.1"
 
 [metadata]
-content-hash = "bab1101646440684f548e3fe2967335420c78661c0b88aa4c937501ee49b9b31"
+content-hash = "f57ad22838cb9ca69e8f6437aa0af8ecd2e5eba94ce332f485b7512256c63e45"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -1622,6 +1639,10 @@ entrypoints = [
 ]
 et-xmlfile = [
     {file = "et_xmlfile-1.0.1.tar.gz", hash = "sha256:614d9722d572f6246302c4491846d2c393c199cfa4edc9af593437691683335b"},
+]
+gunicorn = [
+    {file = "gunicorn-20.0.4-py2.py3-none-any.whl", hash = "sha256:cd4a810dd51bf497552cf3f863b575dabd73d6ad6a91075b65936b151cbf4f9c"},
+    {file = "gunicorn-20.0.4.tar.gz", hash = "sha256:1904bb2b8a43658807108d59c3f3d56c2b6121a701161de0ddf9ad140073c626"},
 ]
 h2 = [
     {file = "h2-2.6.2-py2.py3-none-any.whl", hash = "sha256:93cbd1013a2218539af05cdf9fc37b786655b93bbc94f5296b7dabd1c5cadf41"},
